@@ -1,135 +1,60 @@
-const { Pool } = require("pg");
+// supabaseClient.js
+const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
+const supabase = createClient(
+  "https://ywxjtlthehfqrsurruuu.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3eGp0bHRoZWhmcXJzdXJydXV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxOTQ5OTAsImV4cCI6MjA2Mzc3MDk5MH0.IIXwiaePiESlRL9QnITB-FEGgCId9aiGtUyvmn0hXu8"
+);
+
 class Database {
-  constructor() {
-    this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: true }, // Vercel needs this
-    });
-
-    this.initializeTables();
-  }
-
-  async initializeTables() {
-    try {
-      await this.pool.query(`
-        CREATE TABLE IF NOT EXISTS categories (
-          id SERIAL PRIMARY KEY,
-          name TEXT NOT NULL,
-          slug TEXT NOT NULL UNIQUE,
-          image TEXT,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
-      await this.pool.query(`
-        CREATE TABLE IF NOT EXISTS products (
-          id SERIAL PRIMARY KEY,
-          category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
-          name TEXT NOT NULL,
-          slug TEXT NOT NULL UNIQUE,
-          description TEXT,
-          price NUMERIC NOT NULL,
-          width NUMERIC,
-          height NUMERIC,
-          weight NUMERIC,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
-      await this.pool.query(`
-        CREATE TABLE IF NOT EXISTS product_images (
-          id SERIAL PRIMARY KEY,
-          product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-          image_path TEXT NOT NULL
-        );
-      `);
-
-      await this.pool.query(`
-        INSERT INTO categories (name, slug)
-        VALUES 
-          ('Foods', 'foods'),
-          ('Milk', 'milk'),
-          ('Others', 'others')
-        ON CONFLICT (slug) DO NOTHING;
-      `);
-    } catch (err) {
-      console.error("Database initialization error:", err.message);
-    }
-  }
-
   /** ========== CATEGORY CRUD ========== */
 
   async createCategory({ name, slug, image = null }) {
-    try {
-      await this.pool.query(
-        `INSERT INTO categories (name, slug, image) VALUES ($1, $2, $3)`,
-        [name, slug, image]
-      );
-      return { success: true, message: "Category created successfully." };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { error } = await supabase
+      .from("categories")
+      .insert([{ name, slug, image }]);
+
+    if (error) return { success: false, message: error.message };
+    return { success: true, message: "Category created successfully." };
   }
 
   async getAllCategories() {
-    try {
-      const res = await this.pool.query(
-        `SELECT * FROM categories ORDER BY name ASC`
-      );
-      return {
-        success: true,
-        message: "Categories retrieved successfully.",
-        data: res.rows,
-      };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) return { success: false, message: error.message };
+    return { success: true, data };
   }
 
   async getCategoryById(id) {
-    try {
-      const res = await this.pool.query(
-        `SELECT * FROM categories WHERE id = $1`,
-        [id]
-      );
-      return {
-        success: true,
-        message: "Category retrieved successfully.",
-        data: res.rows[0],
-      };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) return { success: false, message: error.message };
+    return { success: true, data };
   }
 
   async updateCategory(id, { name, slug, image = null }) {
-    try {
-      const res = await this.pool.query(
-        `UPDATE categories SET name = $1, slug = $2, image = $3 WHERE id = $4`,
-        [name, slug, image, id]
-      );
-      if (res.rowCount === 0) {
-        return {
-          success: false,
-          message:
-            "No category was updated. Maybe the ID does not exist or data is unchanged.",
-        };
-      }
-      return { success: true, message: "Category updated successfully." };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { error } = await supabase
+      .from("categories")
+      .update({ name, slug, image })
+      .eq("id", id);
+
+    if (error) return { success: false, message: error.message };
+    return { success: true, message: "Category updated successfully." };
   }
 
   async deleteCategory(id) {
-    try {
-      await this.pool.query(`DELETE FROM categories WHERE id = $1`, [id]);
-      return { success: true, message: "Category deleted successfully." };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { error } = await supabase.from("categories").delete().eq("id", id);
+
+    if (error) return { success: false, message: error.message };
+    return { success: true, message: "Category deleted successfully." };
   }
 
   /** ========== PRODUCT CRUD ========== */
@@ -145,96 +70,66 @@ class Database {
     weight = null,
     images = [],
   }) {
-    const client = await this.pool.connect();
-    try {
-      await client.query("BEGIN");
-      const insertProductQuery = `
-        INSERT INTO products (category_id, name, slug, description, price, width, height, weight)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING id
-      `;
-      const res = await client.query(insertProductQuery, [
-        category_id,
-        name,
-        slug,
-        description,
-        price,
-        width,
-        height,
-        weight,
-      ]);
+    const { data, error } = await supabase
+      .from("products")
+      .insert([
+        { category_id, name, slug, description, price, width, height, weight },
+      ])
+      .select("id")
+      .single();
 
-      const productId = res.rows[0].id;
+    if (error) return { success: false, message: error.message };
 
-      if (images.length > 0) {
-        const insertImageQuery = `
-          INSERT INTO product_images (product_id, image_path) VALUES ($1, $2)
-        `;
-        for (const img of images) {
-          await client.query(insertImageQuery, [productId, img]);
-        }
-      }
+    const productId = data.id;
 
-      await client.query("COMMIT");
-      return {
-        success: true,
-        message: "Product and images created successfully.",
-        productId,
-      };
-    } catch (err) {
-      await client.query("ROLLBACK");
-      return { success: false, message: err.message };
-    } finally {
-      client.release();
-    }
+    const imageInserts = images.map((img) => ({
+      product_id: productId,
+      image_path: img,
+    }));
+    const { error: imageError } = await supabase
+      .from("product_images")
+      .insert(imageInserts);
+
+    if (imageError) return { success: false, message: imageError.message };
+
+    return {
+      success: true,
+      productId,
+      message: "Product and images created successfully.",
+    };
   }
 
   async getProductById(id) {
-    try {
-      const query = `
-        SELECT products.*, categories.name AS category_name, categories.slug AS category_slug,
-        (
-          SELECT json_agg(image_path) FROM product_images WHERE product_id = products.id
-        ) AS images
-        FROM products
-        JOIN categories ON products.category_id = categories.id
-        WHERE products.id = $1
-      `;
-      const res = await this.pool.query(query, [id]);
-      const row = res.rows[0];
-      return {
-        success: true,
-        message: "Product retrieved successfully.",
-        data: row ? { ...row, images: row.images || [] } : null,
-      };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { data, error } = await supabase
+      .from("products")
+      .select(
+        `*, category:categories (name, slug), images:product_images (image_path)`
+      )
+      .eq("id", id)
+      .single();
+
+    if (error) return { success: false, message: error.message };
+
+    const images = data.images?.map((i) => i.image_path) || [];
+    return { success: true, data: { ...data, images } };
   }
 
   async getAllProducts() {
-    try {
-      const query = `
-        SELECT products.*, categories.name AS category_name, categories.slug AS category_slug,
-        (
-          SELECT json_agg(image_path) FROM product_images WHERE product_id = products.id
-        ) AS images
-        FROM products
-        JOIN categories ON products.category_id = categories.id
-        ORDER BY products.created_at DESC
-      `;
-      const res = await this.pool.query(query);
-      return {
-        success: true,
-        message: "Products retrieved successfully.",
-        data: res.rows.map((row) => ({
-          ...row,
-          images: row.images || [],
-        })),
-      };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
+    const { data, error } = await supabase
+      .from("products")
+      .select(
+        `*, category:categories (name, slug), images:product_images (image_path)`
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) return { success: false, message: error.message };
+
+    const formatted = data.map((item) => ({
+      ...item,
+      images: item.images?.map((i) => i.image_path) || [],
+    }));
+
+    return { success: true, data: formatted };
   }
 
   async updateProduct(
@@ -251,62 +146,61 @@ class Database {
       images = [],
     }
   ) {
-    const client = await this.pool.connect();
-    try {
-      await client.query("BEGIN");
+    const { error } = await supabase
+      .from("products")
+      .update({
+        category_id,
+        name,
+        slug,
+        description,
+        price,
+        width,
+        height,
+        weight,
+      })
+      .eq("id", id);
 
-      await client.query(
-        `UPDATE products SET category_id = $1, name = $2, slug = $3, description = $4, price = $5, width = $6, height = $7, weight = $8 WHERE id = $9`,
-        [category_id, name, slug, description, price, width, height, weight, id]
+    if (error) return { success: false, message: error.message };
+
+    const { data: existing, error: imgError } = await supabase
+      .from("product_images")
+      .select("image_path")
+      .eq("product_id", id);
+
+    if (imgError) return { success: false, message: imgError.message };
+
+    const oldImages = existing.map((i) => i.image_path);
+    const toInsert = images.filter((img) => !oldImages.includes(img));
+    const toDelete = oldImages.filter((img) => !images.includes(img));
+
+    if (toDelete.length > 0) {
+      await Promise.all(
+        toDelete.map((img) =>
+          supabase
+            .from("product_images")
+            .delete()
+            .eq("product_id", id)
+            .eq("image_path", img)
+        )
       );
-
-      const oldRes = await client.query(
-        `SELECT image_path FROM product_images WHERE product_id = $1`,
-        [id]
-      );
-      const oldImages = oldRes.rows.map((r) => r.image_path);
-
-      const toDelete = oldImages.filter((img) => !images.includes(img));
-      const toInsert = images.filter((img) => !oldImages.includes(img));
-
-      for (const img of toDelete) {
-        await client.query(
-          `DELETE FROM product_images WHERE product_id = $1 AND image_path = $2`,
-          [id, img]
-        );
-      }
-
-      for (const img of toInsert) {
-        await client.query(
-          `INSERT INTO product_images (product_id, image_path) VALUES ($1, $2)`,
-          [id, img]
-        );
-      }
-
-      await client.query("COMMIT");
-      return { success: true, message: "Product updated successfully." };
-    } catch (err) {
-      await client.query("ROLLBACK");
-      return { success: false, message: err.message };
-    } finally {
-      client.release();
     }
+
+    if (toInsert.length > 0) {
+      const newInserts = toInsert.map((img) => ({
+        product_id: id,
+        image_path: img,
+      }));
+      await supabase.from("product_images").insert(newInserts);
+    }
+
+    return { success: true, message: "Product updated successfully." };
   }
 
   async deleteProduct(id) {
-    try {
-      await this.pool.query(`DELETE FROM products WHERE id = $1`, [id]);
-      return { success: true, message: "Product deleted successfully." };
-    } catch (err) {
-      return { success: false, message: err.message };
-    }
-  }
+    const { error } = await supabase.from("products").delete().eq("id", id);
 
-  /** ========== Utility ========== */
-
-  async close() {
-    await this.pool.end();
-    console.log("✅ DB connection closed.");
+    if (error) return { success: false, message: error.message };
+    return { success: true, message: "Product deleted successfully." };
   }
 }
 
