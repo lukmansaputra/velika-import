@@ -2,7 +2,6 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const app = express();
 const path = require("path");
-const db = require("./Database");
 const mainRoutes = require("./App/routes");
 
 const port = process.env.PORT || 8080;
