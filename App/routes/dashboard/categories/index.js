@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
   try {
     const category = await db.getAllCategories();
 
-    res.render("dashboard/category", { category: category.data });
+    res.render("dashboard/category", { category });
   } catch (error) {
     console.error(error);
   }
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.get("/new-category", async (req, res) => {
   try {
-    res.render("dashboard/new-category");
+    res.render("dashboard/category/new-category");
   } catch (error) {
     console.error(error);
   }
@@ -25,7 +25,7 @@ router.get("/edit-category/:categoryId", async (req, res) => {
   try {
     const category = await db.getCategoryById(req.params.categoryId);
 
-    res.render("dashboard/edit-category", { category: category.data });
+    res.render("dashboard/category/edit-category", { category: category.data });
   } catch (error) {
     console.error(error);
   }
@@ -54,6 +54,8 @@ router.post("/new-category", async (req, res) => {
 
 router.post("/edit-category", async (req, res) => {
   try {
+    console.log("disini");
+
     function replaceSpacesWithHyphens(text) {
       return text.replace(/\s+/g, "-").toLowerCase();
     }

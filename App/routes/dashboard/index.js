@@ -18,14 +18,18 @@ router.get("/", async (req, res) => {
   const categories = await db.getAllCategories();
   console.log(categories);
 
-  if (!products.status || !categories.status) {
+  if (products.data.length === 0) {
     return res.render("dashboard/index.ejs", {
       totalProducts: 0,
+    });
+  }
+  if (categories.data.length === 0) {
+    return res.render("dashboard/index.ejs", {
       totalCategories: 0,
     });
   }
   const totalProducts = Object.keys(products.data).length;
-  const totalCategories = Object.keys(categories).length;
+  const totalCategories = Object.keys(categories.data).length;
 
   res.render("dashboard/index.ejs", { totalProducts, totalCategories });
 });

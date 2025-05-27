@@ -20,19 +20,20 @@ const upload = multer({ storage: storage });
 
 // GET form
 router.get("/:productId", async (req, res) => {
-  const categories = await db.getCategories();
+  const categories = await db.getAllCategories();
   const result = await db.getProductById(req.params.productId);
-  console.log(result);
 
-  res.render("edit-product", {
-    product: result,
-    images: result.images,
-    categories,
+  res.render("dashboard/product/edit-product", {
+    product: result.data,
+    images: result.data.images,
+    categories: categories.data,
   });
 });
 
 // POST form
 router.post("/", upload.array("images"), async (req, res) => {
+  console.log("disiini");
+
   function replaceSpacesWithHyphens(text) {
     return text.replace(/\s+/g, "-").toLowerCase();
   }
@@ -59,7 +60,6 @@ router.post("/", upload.array("images"), async (req, res) => {
   try {
     // Ambil gambar lama dari database
     const existingProduct = await db.getProductById(product_id);
-    console.log(existingProduct);
 
     const oldImages = existingProduct.images || [];
 
@@ -87,8 +87,7 @@ router.post("/", upload.array("images"), async (req, res) => {
     const finalImages = [...existingImages, ...newImagePaths];
 
     // Update data produk di DB
-    await db.updateProductWithImages({
-      id: product_id,
+    await db.updateProduct(product_id, {
       category_id,
       name: product_name,
       slug: replaceSpacesWithHyphens(product_name),
@@ -100,7 +99,7 @@ router.post("/", upload.array("images"), async (req, res) => {
       images: finalImages, // gabungan existing + baru
     });
 
-    res.json({ success: true });
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error("Error updating product:", err);
     res.status(500).json({ success: false, message: "Internal Server Error" });

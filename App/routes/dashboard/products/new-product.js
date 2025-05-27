@@ -30,6 +30,8 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     function replaceSpacesWithHyphens(text) {
       return text.replace(/\s+/g, "-").toLowerCase();
     }
+    console.log(req.files);
+
     const {
       product_name,
       item_weight,
@@ -42,11 +44,11 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     const imagePaths = req.files.map((file) => "/uploads/" + file.filename); // Path untuk disimpan ke DB
 
     // Simpan ke database sesuai kebutuhan
-    const result = await db.insertProduct({
+    const result = await db.createProduct({
       category_id,
-      product_name,
-      product_slug: replaceSpacesWithHyphens(product_name),
-      product_price,
+      name: product_name,
+      slug: replaceSpacesWithHyphens(product_name),
+      price: product_price,
       description,
       images: imagePaths, // Pastikan DB bisa menyimpan array (atau simpan sebagai string/JSON)
       width: item_width,
@@ -60,15 +62,6 @@ router.post("/", upload.array("images", 5), async (req, res) => {
     res.status(500).json({ error: "Failed to create product" });
   }
 });
-
-// router.post("/new-product", async (req, res) => {
-//   try {
-//     console.log(req.body);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Failed to create new product" });
-//   }
-// });
 
 router.post("/add-category", async (req, res) => {
   try {

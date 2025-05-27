@@ -34,14 +34,14 @@
                    </tr>
                </thead>
                <tbody>
-               <% if (data && data.length > 0) { %>
+               <% if (data && data.data.length > 0) { %>
                  <% let a = 1; %>
-                 <% data.forEach(product => { %>
+                 <% data.data.forEach(product => { %>
                    <tr id="product-<%= product.id %>" class="bg-white border-b hover:bg-gray-50">
                      <th class="px-6 py-4 font-medium"><%= a++ %></th>
                      <td class="px-6 py-4"><%= product.name %></td>
                      <td class="px-6 py-4"><%= product.slug %></td>
-                     <td class="px-6 py-4"><%= product.category_name %></td>
+                     <td class="px-6 py-4"><%= product.category?.name || '-' %></td>
                      <td class="px-6 py-4"><%= product.price %></td>
                      <td class="px-6 py-4 text-start">
                        <a href="/dashboard/product/edit-product/<%= product.id %>" class="text-blue-600 hover:underline me-2">Edit</a>
@@ -53,158 +53,9 @@
              </tbody>
            </table>
        </div>
-       
-   
-   
-   <!-- Main modal -->
-   <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-       <div class="relative p-4 w-full max-w-md max-h-full">
-           <!-- Modal content -->
-           <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-               <!-- Modal header -->
-               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                   <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                       Add New Product
-                   </h3>
-                   <button type="button" class="end-2.5  cursor-pointer text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
-                       <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                       </svg>
-                       <span class="sr-only">Close modal</span>
-                   </button>
-               </div>
-           </div>
-       </div>
-   </div> 
-
          <%- include("../bottombar") %>
 
-
-
 </div>
-
-<script>
-  const categorySelect = document.getElementById("category_id");
-const categoryModal = document.getElementById("category-modal");
-const categoryForm = document.getElementById("category-form");
-
-function toggleCategoryModal(show) {
-  if (show) {
-    categoryModal.classList.remove("hidden");
-  } else {
-    categoryModal.classList.add("hidden");
-    categoryForm.reset();
-    categorySelect.value = ""; // reset pilihan jika batal
-  }
-}
-
-categorySelect.addEventListener("change", () => {
-  if (categorySelect.value === "new") {
-    toggleCategoryModal(true);
-  }
-});
-
-categoryForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const newCategoryName = document.getElementById("new_category_name").value.trim();
-  if (!newCategoryName) return alert("Nama kategori tidak boleh kosong");
-
-  // Contoh: kirim data ke backend untuk simpan kategori baru
-  fetch("/dashboard/product-list/add-category", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: newCategoryName }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Gagal menambahkan kategori");
-      return res.json();
-    })
-    .then((data) => {
-      alert("Kategori berhasil ditambahkan!");
-      toggleCategoryModal(false);
-
-      // Tambahkan kategori baru ke dropdown
-      const option = document.createElement("option");
-      option.value = data.id; // pastikan backend mengembalikan ID kategori baru
-      option.textContent = data.name;
-      // Insert sebelum opsi "Tambah Kategori Baru"
-      categorySelect.insertBefore(option, categorySelect.querySelector('option[value="new"]'));
-      categorySelect.value = data.id; // langsung pilih kategori baru
-    })
-    .catch((err) => alert(err.message));
-});
-
-</script>
-<script>
-  const fileInput = document.getElementById("file_input");
-  const previewContainer = document.getElementById("preview");
-  let selectedFiles = [];
-
-  const maxFiles = 5; // Batas maksimal file (opsional)
-
-  fileInput.addEventListener("change", (event) => {
-    const files = Array.from(event.target.files);
-
-    // Gabungkan file lama dan baru
-    selectedFiles = [...selectedFiles, ...files];
-
-    // Batasi jumlah maksimal
-    if (selectedFiles.length > maxFiles) {
-      selectedFiles = selectedFiles.slice(0, maxFiles);
-    }
-
-    updatePreview();
-  });
-
-  function updatePreview() {
-    previewContainer.innerHTML = "";
-
-    selectedFiles.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imageWrapper = document.createElement("div");
-        imageWrapper.className = "relative";
-
-        const img = document.createElement("img");
-        img.src = e.target.result;
-        img.className = "w-20 h-20 object-cover rounded";
-
-        const closeBtn = document.createElement("button");
-        closeBtn.innerHTML = "×";
-        closeBtn.className =
-          "absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center hover:bg-red-700";
-        closeBtn.addEventListener("click", () => {
-          selectedFiles.splice(index, 1);
-          updatePreview(); // Refresh preview
-        });
-
-        imageWrapper.appendChild(img);
-        imageWrapper.appendChild(closeBtn);
-        previewContainer.appendChild(imageWrapper);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Tambah tombol "+" jika ada file dan belum mencapai batas maksimal
-    if (selectedFiles.length > 0 && selectedFiles.length < maxFiles) {
-      addPlusButton();
-    }
-  }
-
-  function addPlusButton() {
-    const addButtonWrapper = document.createElement("div");
-    addButtonWrapper.className =
-      "w-20 h-20 flex items-center justify-center border-2 border-dashed border-gray-300 rounded cursor-pointer hover:bg-gray-100";
-    addButtonWrapper.innerHTML =
-      '<span class="text-2xl text-gray-500">+</span>';
-    addButtonWrapper.addEventListener("click", () => {
-      fileInput.click(); // Trigger input file
-    });
-
-    previewContainer.appendChild(addButtonWrapper);
-  }
-</script>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -219,7 +70,7 @@ categoryForm.addEventListener("submit", (e) => {
         try {
           console.log(productId);
           
-          const response = await fetch(`/dashboard/product-list/delete?id=${productId}`, {
+          const response = await fetch(`/dashboard/product/delete?id=${productId}`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
