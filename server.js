@@ -3,6 +3,7 @@ const expressLayouts = require("express-ejs-layouts");
 const app = express();
 const path = require("path");
 const db = require("./Database");
+const mainRoutes = require("./App/routes");
 
 const port = process.env.PORT || 8080;
 
@@ -23,9 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", (req, res) => {
-  res.render("index");
-});
+app.get("/", mainRoutes);
 
 // Jalankan server
 app.listen(port, () => {
