@@ -111,19 +111,42 @@ class Database {
     return { success: true, data: { ...data, images } };
   }
 
-  async getAllProducts() {
-    const { data, error } = await supabase
+  async getAllProducts(sort = "newest", categorySlug = null) {
+    let sortColumn = "created_at";
+    let ascending = false;
+
+    if (sort === "price_asc") {
+      sortColumn = "price";
+      ascending = true;
+    } else if (sort === "price_desc") {
+      sortColumn = "price";
+      ascending = false;
+    } else if (sort === "oldest") {
+      sortColumn = "created_at";
+      ascending = true;
+    }
+
+    let query = supabase
       .from("products")
       .select(
-        `*, category:categories (name, slug), images:product_images (image_path)`
+        `*, 
+       categories!inner (name, slug), 
+       product_images (image_path)`
       )
-      .order("created_at", { ascending: false });
+      .order(sortColumn, { ascending });
+
+    if (categorySlug) {
+      query = query.eq("categories.slug", categorySlug);
+    }
+
+    const { data, error } = await query;
 
     if (error) return { success: false, message: error.message };
 
     const formatted = data.map((item) => ({
       ...item,
-      images: item.images?.map((i) => i.image_path) || [],
+      category: item.categories,
+      images: item.product_images?.map((i) => i.image_path) || [],
     }));
 
     return { success: true, data: formatted };
