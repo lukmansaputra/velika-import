@@ -13,7 +13,7 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 
 // Set layout default
-app.set("layout", "layouts/layout"); // relatif terhadap folder views
+app.set("layout", "layouts/default"); // relatif terhadap folder views
 
 // Set folder views
 app.set("views", path.join(__dirname, "App/views")); // hanya satu!

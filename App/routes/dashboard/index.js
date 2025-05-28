@@ -6,7 +6,7 @@ const db = require("../../database");
 
 // Tambahkan sebelum semua route di app.js
 router.use((req, res, next) => {
-  res.locals.hideNavbar = true; // default
+  res.locals.layout = "layouts/admin"; // set layout admin otomatis
   next();
 });
 

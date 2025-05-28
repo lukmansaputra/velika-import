@@ -111,6 +111,41 @@ class Database {
     return { success: true, data: { ...data, images } };
   }
 
+  async getProductBySlug(slug) {
+    if (!slug) return { success: false, message: "Slug is required." };
+
+    const { data, error } = await supabase
+      .from("products")
+      .select(
+        `
+      *,
+      category:categories (name, slug),
+      images:product_images (image_path)
+    `
+      )
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) {
+      return {
+        success: false,
+        message: error?.message || "Product not found.",
+      };
+    }
+
+    const images = Array.isArray(data.images)
+      ? data.images.map((img) => img.image_path)
+      : [];
+
+    return {
+      success: true,
+      data: {
+        ...data,
+        images,
+      },
+    };
+  }
+
   async getAllProducts(sort = "newest", categorySlug = null) {
     let sortColumn = "created_at";
     let ascending = false;
