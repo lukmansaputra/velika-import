@@ -1,10 +1,7 @@
-<section class="bg-gray-100 dark:bg-gray-900 min-h-screen flex">
-  <%- include("../sidebar") %>
-    <%- include("../topbar") %>
 
   <div class="px-10 py-6 mx-auto">
     <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-      New product
+      Edit product
     </h2>
     <form>
       <input type="hidden" value="<%= product.id %>" name="product_id" id="product_id">
@@ -148,8 +145,7 @@
       </div>
     </form>
   </div>
-  <%- include("../../components/quill-editor") %>
-</section>
+<%- include("../../components/quill-editor") %>
 
 <script>  
   document.addEventListener("DOMContentLoaded", function () {
