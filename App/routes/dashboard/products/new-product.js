@@ -1,37 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
 const db = require("../../../database");
+const cloudinary = require("../../../helper/cloudinary");
+const stream = require("stream");
 
-// Setup storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/"); // Pastikan folder ini ada
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Contoh: 123456789.jpg
-  },
-});
+// Setup memory storage (untuk buffer)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-const upload = multer({ storage: storage });
+function replaceSpacesWithHyphens(text) {
+  return text.replace(/\s+/g, "-").toLowerCase();
+}
 
+// GET form create
 router.get("/", async (req, res) => {
   const categories = await db.getAllCategories();
-  console.log(categories);
-  console.log(categories.data.length > 0);
-
   res.render("dashboard/product/new-product", { categories });
 });
 
+// POST create product
 router.post("/", upload.array("images", 5), async (req, res) => {
   try {
-    function replaceSpacesWithHyphens(text) {
-      return text.replace(/\s+/g, "-").toLowerCase();
-    }
-    console.log(req.files);
-
     const {
       product_name,
       item_weight,
@@ -41,16 +31,38 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       description,
       category_id,
     } = req.body;
-    const imagePaths = req.files.map((file) => "/uploads/" + file.filename); // Path untuk disimpan ke DB
 
-    // Simpan ke database sesuai kebutuhan
+    const uploadedUrls = [];
+
+    for (const file of req.files) {
+      const uploadPromise = new Promise((resolve, reject) => {
+        const cloudStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "produk",
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          }
+        );
+
+        const bufferStream = new stream.PassThrough();
+        bufferStream.end(file.buffer);
+        bufferStream.pipe(cloudStream);
+      });
+
+      const uploadedUrl = await uploadPromise;
+      uploadedUrls.push(uploadedUrl);
+    }
+
+    // Simpan ke database
     const result = await db.createProduct({
       category_id,
       name: product_name,
       slug: replaceSpacesWithHyphens(product_name),
       price: product_price,
       description,
-      images: imagePaths, // Pastikan DB bisa menyimpan array (atau simpan sebagai string/JSON)
+      images: uploadedUrls, // Simpan array URL Cloudinary
       width: item_width,
       height: item_height,
       weight: item_weight,
@@ -63,20 +75,21 @@ router.post("/", upload.array("images", 5), async (req, res) => {
   }
 });
 
+// Tambah kategori
 router.post("/add-category", async (req, res) => {
   try {
     const { name } = req.body;
-    const newString = name.replace(/\s/g, "-").toLowerCase();
+    const slug = name.replace(/\s/g, "-").toLowerCase();
 
-    const result = await db.insertCategories({ name: name, slug: newString });
+    const result = await db.insertCategories({ name, slug });
     res.status(200).json({ message: "Categories created", data: result });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     res.status(500).json({ error: "Failed to create categories" });
   }
 });
 
+// Hapus produk
 router.post("/delete", async (req, res) => {
   try {
     const productId = req.query.id;
@@ -84,7 +97,10 @@ router.post("/delete", async (req, res) => {
     if (result.success) {
       res.status(200).json({ message: `Deleted product ${productId}` });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete product" });
+  }
 });
 
 module.exports = router;

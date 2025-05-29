@@ -1,24 +1,41 @@
-const fs = require("fs");
 const express = require("express");
 const router = express.Router();
 const db = require("../../../database");
 const multer = require("multer");
+const cloudinary = require("../../../helper/cloudinary");
 const path = require("path");
+const stream = require("stream");
 
-// Setup multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
+// Gunakan memory storage agar tidak tulis ke filesystem
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-const upload = multer({ storage: storage });
+// Fungsi util: upload buffer ke Cloudinary
+function uploadToCloudinary(buffer) {
+  return new Promise((resolve, reject) => {
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(buffer);
 
-// GET form
+    const cloudStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "produk",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result.secure_url);
+      }
+    );
+
+    bufferStream.pipe(cloudStream);
+  });
+}
+
+// Fungsi util: konversi teks ke slug
+function replaceSpacesWithHyphens(text) {
+  return text.replace(/\s+/g, "-").toLowerCase();
+}
+
+// GET form edit produk
 router.get("/:productId", async (req, res) => {
   const categories = await db.getAllCategories();
   const result = await db.getProductById(req.params.productId);
@@ -30,13 +47,8 @@ router.get("/:productId", async (req, res) => {
   });
 });
 
-// POST form
+// POST form edit produk
 router.post("/", upload.array("images"), async (req, res) => {
-  console.log("disiini");
-
-  function replaceSpacesWithHyphens(text) {
-    return text.replace(/\s+/g, "-").toLowerCase();
-  }
   const {
     product_id,
     product_name,
@@ -48,7 +60,7 @@ router.post("/", upload.array("images"), async (req, res) => {
     category_id,
   } = req.body;
 
-  // Konversi existing_images menjadi array (bisa undefined, string, atau array)
+  // Handle existing images
   const existingImages = Array.isArray(req.body["existing_images"])
     ? req.body["existing_images"]
     : req.body["existing_images"]
@@ -58,35 +70,32 @@ router.post("/", upload.array("images"), async (req, res) => {
   const newFiles = req.files;
 
   try {
-    // Ambil gambar lama dari database
+    // Ambil data produk lama
     const existingProduct = await db.getProductById(product_id);
-
     const oldImages = existingProduct.images || [];
 
-    // Bandingkan gambar lama dengan existingImages dari form
+    // Cari gambar yang dihapus (tidak ada di form submit)
     const imagesToDelete = oldImages.filter(
       (img) => !existingImages.includes(img)
     );
 
-    // Hapus file dari folder public/uploads/
-    for (const filename of imagesToDelete) {
-      const filepath = path.join(
-        __dirname,
-        "../../public/uploads",
-        path.basename(filename)
-      );
-      if (fs.existsSync(filepath)) {
-        fs.unlinkSync(filepath);
-      }
+    // Hapus dari Cloudinary
+    for (const imgUrl of imagesToDelete) {
+      const publicId = imgUrl.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(`produk/${publicId}`);
     }
 
-    // Simpan gambar baru (dari req.files)
-    const newImagePaths = newFiles.map((file) => "/uploads/" + file.filename);
+    // Upload gambar baru
+    const newImageUrls = [];
+    for (const file of newFiles) {
+      const imageUrl = await uploadToCloudinary(file.buffer);
+      newImageUrls.push(imageUrl);
+    }
 
-    // Gabungkan gambar yang masih ada + baru
-    const finalImages = [...existingImages, ...newImagePaths];
+    // Gabungkan existing + new images
+    const finalImages = [...existingImages, ...newImageUrls];
 
-    // Update data produk di DB
+    // Update ke database
     await db.updateProduct(product_id, {
       category_id,
       name: product_name,
@@ -96,7 +105,7 @@ router.post("/", upload.array("images"), async (req, res) => {
       height: item_height,
       weight: item_weight,
       description,
-      images: finalImages, // gabungan existing + baru
+      images: finalImages,
     });
 
     res.status(200).json({ success: true });
