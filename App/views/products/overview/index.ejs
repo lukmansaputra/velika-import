@@ -80,21 +80,21 @@
     <div class="sticky top-28 p-4 border rounded-lg shadow-md bg-white space-y-4">
       <p class="text-sm">Atur jumlah dan catatan</p>
       <div class="flex items-center gap-2">
-        <button class="bg-gray-200 px-3 py-1 rounded">-</button>
-        <input type="number" value="1" class="w-12 text-center border rounded" />
-        <button class="bg-gray-200 px-3 py-1 rounded">+</button>
+        <button id="min" class="bg-blue-200 px-3 cursor-pointer py-1 rounded">-</button>
+        <input type="number" id="value" value="1" class="w-12 text-center border rounded" />
+        <button id="plus" class="bg-blue-200 cursor-pointer px-3 py-1 rounded">+</button>
       </div>
       <p class="text-sm text-gray-500">Stok: 453</p>
 
       <div class="space-y-2">
         <p class="font-semibold text-red-500 text-lg">Rp<%= product.price.toLocaleString('id-ID') %></p>
         <div class="flex gap-2">
-          <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
+          <!-- <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
             + Keranjang
-          </button>
-          <button class="border border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
+          </button> -->
+          <a target="_blank" href="https://api.whatsapp.com/send?phone=6281585392717&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://express-two-azure.vercel.app/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
             Beli
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -104,6 +104,27 @@
 <!-- Carousel & Read More Scripts -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+     const minButton = document.getElementById("min");
+    const plusButton = document.getElementById("plus");
+    const valueInput = document.getElementById("value");
+
+    minButton.addEventListener("click", () => {
+      let currentValue = parseInt(valueInput.value) || 0;
+      if (currentValue <= 0) {
+        minButton.disabled = true;
+      } else {
+        valueInput.value = currentValue - 1;
+        if (currentValue - 1 <= 0) {
+          minButton.disabled = true;
+        }
+      }
+    });
+
+    plusButton.addEventListener("click", () => {
+      let currentValue = parseInt(valueInput.value) || 0;
+      valueInput.value = currentValue + 1;
+      minButton.disabled = false; // aktifkan kembali tombol minus
+    });
     // Carousel
     let currentIndex = 0;
     const slides = document.querySelectorAll("[data-carousel-item]");

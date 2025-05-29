@@ -7,19 +7,19 @@
     </h2>
 
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
-      <% products.forEach(product => { %>
-        <a href="/product/overview/<%= product.slug %>" class="cursor-pointer relative group rounded-lg overflow-hidden shadow-lg">
-          <img
-            class="h-[10rem] md:h-[15rem] w-full object-cover"
-            src="<%= product.images[0] %>"
-            alt="<%= product.name %>"
-          />
-          <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
-            <span class="text-white text-lg font-semibold">View Product</span>
-          </div>
+     <% products.slice(0, 6).forEach(product => { %>
+      <a href="/product/overview/<%= product.slug %>" class="cursor-pointer relative group rounded-lg overflow-hidden shadow-lg">
+        <img
+          class="h-[10rem] md:h-[15rem] w-full object-cover"
+          src="<%= product.images[0] %>"
+          alt="<%= product.name %>"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+          <span class="text-white text-lg font-semibold">View Product</span>
+        </div>
+      </a>
+    <% }); %>
 
-        </a>
-      <% }); %>
 
       <!-- See More Card -->
       <a href="/product" class="flex items-center justify-center border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-lg text-center p-8 hover:border-indigo-500 transition">
@@ -49,11 +49,11 @@
         <p class="text-gray-600 mb-6 dark:text-gray-300">
           We offer a curated selection of high-quality products to meet your everyday needs. With a focus on customer satisfaction, we strive to provide excellent service and fast delivery. Explore our collection and discover something special today.
         </p>
-        <button
+        <!-- <button
           class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition"
         >
           Learn More
-        </button>
+        </button> -->
       </div>
       <!-- Image -->
       <div>
