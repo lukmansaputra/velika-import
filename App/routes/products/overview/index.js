@@ -22,6 +22,10 @@ router.get("/:productSlug", async (req, res) => {
 
     // Diskon aktif hanya jika flag true dan dalam rentang waktu
     p.is_discount_active = p.is_discount && now >= start && now <= end;
+    console.log(p.is_discount_active);
+    console.log(now);
+    console.log(start);
+    console.log(end);
 
     res.render("products/overview", { product: p });
   } catch (err) {
