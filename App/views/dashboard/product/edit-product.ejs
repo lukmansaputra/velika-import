@@ -26,21 +26,16 @@
           />
         </div>
         <div class="w-full">
-          <label
-            for="price"
-            class="block mb-2 text-sm font-medium text-gray-900"
-            >Price</label
-          >
+          <label for="price_display" class="block mb-2 text-sm font-medium text-gray-900">Price</label>
           <input
-            type="number"
-            value="<%= product.price %>"
-            name="price"
-            id="price"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-            placeholder="Example: 12000"
-            required=""
+            type="text"
+            id="price_display"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            placeholder="Rp12.000"
             autocomplete="off"
+            value="<%= product.price %>"
           />
+          <input type="hidden" name="price" id="price" />
         </div>
         <div>
           <label
@@ -307,3 +302,37 @@
   </script>
 
 
+
+<script>
+  const priceDisplay = document.getElementById('price_display');
+  const priceHidden = document.getElementById('price');
+
+  function formatRupiah(value) {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(value);
+  }
+
+  priceDisplay.addEventListener('input', function (e) {
+    let value = e.target.value.replace(/[^\d]/g, '');
+    if (value === "") {
+      priceHidden.value = "";
+      priceDisplay.value = "";
+      return;
+    }
+
+    priceHidden.value = value;
+    priceDisplay.value = formatRupiah(value);
+  });
+
+  // Format saat halaman pertama kali dimuat (jika value sudah ada)
+  document.addEventListener('DOMContentLoaded', function () {
+    const initialValue = priceDisplay.value.replace(/[^\d]/g, '');
+    if (initialValue) {
+      priceHidden.value = initialValue;
+      priceDisplay.value = formatRupiah(initialValue);
+    }
+  });
+</script>
