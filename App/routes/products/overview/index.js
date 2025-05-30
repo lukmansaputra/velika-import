@@ -16,7 +16,10 @@ router.get("/:productSlug", async (req, res) => {
       );
 
     // Cek apakah diskon aktif berdasarkan waktu
-    const now = new Date();
+    const now = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
+    );
+
     const start = new Date(p.discount_start);
     const end = new Date(p.discount_end);
 
