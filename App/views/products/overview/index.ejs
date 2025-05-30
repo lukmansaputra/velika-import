@@ -107,7 +107,7 @@
       <p class="text-sm text-gray-500 dark:text-gray-300" id="stock">Stok: <%= product.stock %></p>
 
       <div class="space-y-2">
-        <% if (product.is_discount_active) { %>
+        <% if (product.is_discount) { %>
             <span class="text-red-500 text-lg font-semibold">
               Rp<%= (product.price * (1 - product.discount_percent / 100)).toLocaleString('id-ID') %>
             </span>
