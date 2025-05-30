@@ -57,7 +57,6 @@
 
   <!-- Harga & Diskon -->
   <div class="space-y-1">
-    <h1><%= product.is_discount_active %></h1>
    <% if (product.is_discount_active) { %>
       <span class="text-red-500 text-lg font-semibold">
         Rp<%= (product.price * (1 - product.discount_percent / 100)).toLocaleString('id-ID') %>
@@ -98,7 +97,7 @@
 
 
   <!-- Sticky Checkout -->
-  <div class="relative">
+  <div class="relative ">
     <div class="sticky top-28 p-4 border rounded-lg shadow-md bg-white dark:bg-gray-800 dark:text-gray-300 space-y-4">
       <p class="text-sm">Atur jumlah dan catatan</p>
       <div class="flex items-center gap-2">
@@ -110,6 +109,7 @@
 
       <div class="space-y-2">
        <div id="total-price" class="space-y-1">
+          
         <% if (product.is_discount_active) { %>
           <div>
             <span class="text-red-500 text-lg font-semibold">
@@ -135,7 +135,7 @@
           <!-- <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
             + Keranjang
           </button> -->
-          <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://express-two-azure.vercel.app/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
+          <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://www.berkahjaya.id/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
             Beli
           </a>
         </div>
@@ -153,18 +153,22 @@
     const totalPriceEl = document.getElementById("total-price");
 
     // Ambil harga dasar (sudah termasuk diskon jika aktif)
-    const basePrice = <%= product.is_discount ? (product.price * (1 - product.discount_percent / 100)) : product.price %>;
+    const basePrice = <%= product.is_discount_active ? (product.price * (1 - product.discount_percent / 100)) : product.price %>;
     const maxStock = <%= product.stock %>;
 
     function updateTotalPrice() {
+      
       const qty = parseInt(valueInput.value) || 1;
       const total = basePrice * qty;
       const originalTotal = <%= product.price %> * qty;
 
       if (<%= product.is_discount_active %>) {
         totalPriceEl.innerHTML = `
-          <div class="text-sm text-gray-400 line-through">Rp${originalTotal.toLocaleString('id-ID')}</div>
-          <div class="text-red-500 text-lg font-semibold">Rp${total.toLocaleString('id-ID')}</div>
+          <span class="text-sm text-gray-400 line-through">Rp${originalTotal.toLocaleString('id-ID')}</span>
+          <span class="text-red-500 text-lg font-semibold">Rp${total.toLocaleString('id-ID')}</span>
+          <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">
+              -<%= product.discount_percent %>%
+            </span>
         `;
       } else {
         totalPriceEl.innerHTML = `<div class="text-red-500 text-lg font-semibold">Rp${total.toLocaleString('id-ID')}</div>`;
