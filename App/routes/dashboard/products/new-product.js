@@ -36,9 +36,9 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       discount_end,
       stock,
     } = req.body;
-    console.log(req.body);
-    console.log(req.files);
-
+    function parseNullableDate(value) {
+      return value === "null" || value === "" ? null : value;
+    }
     const uploadedUrls = [];
 
     for (const file of req.files) {
@@ -75,11 +75,10 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       weight: item_weight,
       is_discount,
       discount_percent,
-      discount_start,
-      discount_end,
+      discount_start: parseNullableDate(discount_start),
+      discount_end: parseNullableDate(discount_end),
       stock,
     });
-    console.log(result);
 
     res.status(200).json({ message: "Product created", data: result });
   } catch (err) {

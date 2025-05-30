@@ -64,7 +64,9 @@ router.post("/", upload.array("images"), async (req, res) => {
     description,
     category_id,
   } = req.body;
-  console.log(req.body);
+  function parseNullableDate(value) {
+    return value === "null" || value === "" ? null : value;
+  }
 
   // Handle existing images
   const existingImages = Array.isArray(req.body["existing_images"])
@@ -112,8 +114,8 @@ router.post("/", upload.array("images"), async (req, res) => {
       weight: item_weight,
       is_discount,
       discount_percent,
-      discount_start,
-      discount_end,
+      discount_start: parseNullableDate(discount_start),
+      discount_end: parseNullableDate(discount_end),
       stock,
       description,
       images: finalImages,

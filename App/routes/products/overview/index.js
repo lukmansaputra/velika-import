@@ -6,6 +6,7 @@ router.get("/:productSlug", async (req, res) => {
   try {
     const product = await db.getProductBySlug(req.params.productSlug);
     const p = product.data;
+    console.log(p);
 
     // Bersihkan warna teks HTML
     p.description = p.description
