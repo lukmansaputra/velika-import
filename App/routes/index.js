@@ -9,7 +9,6 @@ router.use("/product", productsHandle);
 
 router.get("/", async (req, res) => {
   const product = await db.getAllProducts();
-  console.log(product.data);
 
   res.render("home", { products: product.data });
 });

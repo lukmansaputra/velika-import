@@ -23,21 +23,17 @@
           />
         </div>
         <div class="w-full">
-          <label
-            for="price"
-            class="block mb-2 text-sm font-medium text-gray-900 "
-            >Price</label
-          >
-          <input
-            type="number"
-            name="price"
-            id="price"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-            placeholder="Example: 12000"
-            required=""
-            autocomplete="off"
-          />
-        </div>
+  <label for="price_display" class="block mb-2 text-sm font-medium text-gray-900">Price</label>
+  <input
+    type="text"
+    id="price_display"
+    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+    placeholder="Rp12.000"
+    autocomplete="off"
+  />
+  <input type="hidden" name="price" id="price" />
+</div>
+
       </div>
         <div>
           <label
@@ -219,7 +215,6 @@
     const discountEnd = document.getElementById("discount_end").value;
     const stock = document.getElementById("stock").value.trim()
 
-
     // Validasi sederhana
     if (!name || !price || !description) {
       alert("Please fill all required fields.");
@@ -264,6 +259,7 @@
       .catch((error) => {
         alert("Upload error: " + error.message);
       });
+   
   });
 </script>
 <script>
@@ -278,3 +274,28 @@
     }
   });
 </script>
+
+<script>
+  const priceDisplay = document.getElementById('price_display');
+  const priceHidden = document.getElementById('price');
+
+  priceDisplay.addEventListener('input', function (e) {
+    let value = e.target.value.replace(/[^\d]/g, '');
+    if (value === "") {
+      priceHidden.value = "";
+      priceDisplay.value = "";
+      return;
+    }
+
+    priceHidden.value = value;
+
+    let formatted = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(value);
+
+    priceDisplay.value = formatted;
+  });
+</script>
+

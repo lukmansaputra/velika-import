@@ -2,7 +2,7 @@
 
   <!-- Product Image Carousel -->
   <div class="overflow-hidden h-full">
-    <div id="product-carousel" class="relative w-full h-[300px] md:h-full z-0">
+    <div id="product-carousel" class="relative w-full h-[350px] z-0">
       <div class="relative w-full h-full overflow-hidden rounded-lg">
         <% product.images.forEach((element, index) => { %>
           <div
@@ -64,7 +64,7 @@
             <span class="line-through text-gray-400">
               Rp<%= product.price.toLocaleString('id-ID') %>
             </span>
-            <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">
+            <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded"> 
               -<%= product.discount_percent %>%
             </span>
             <p class="text-sm text-gray-500">
@@ -85,10 +85,11 @@
       <li>- Tinggi: <%= product.height %>cm</li>
       <li>- Lebar: <%= product.width %>cm</li>
     </ul>
-    <p class="font-semibold">Deskripsi Produk:</p>
-    <div id="product-description" class="max-h-[180px] overflow-hidden relative text-gray-300 text-sm whitespace-pre-line">
+    <br>
+    <p class="font-semibold mb-2">Deskripsi Produk:</p>
+    <div id="product-description" class="max-h-[110px] overflow-hidden relative text-gray-300 text-sm">
       <p id="description-text" class="text-black dark:text-white"><%- product.description %></p>
-      <div id="fade-overlay" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-100 to-transparent dark:bg-gradient-to-t dark:from-gray-700"></div>
+      <div id="fade-overlay" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-100 to-transparent dark:bg-gradient-to-t dark:from-gray-800"></div>
     </div>
     <button id="read-more-btn" class="text-blue-600 mt-2 text-sm cursor-pointer">Baca selengkapnya</button>
   </div>
@@ -101,7 +102,7 @@
       <p class="text-sm">Atur jumlah dan catatan</p>
       <div class="flex items-center gap-2">
         <button id="min" class="bg-blue-200 dark:bg-gray-600 px-3 cursor-pointer py-1 rounded dark:border">-</button>
-        <input type="number" id="value" value="1" class="w-12 text-center border rounded" />
+        <input type="number" id="value" value="1" class="w-12 text-center border rounded dark:text-black" />
         <button id="plus" class="bg-blue-200 cursor-pointer px-3 py-1 rounded dark:border dark:bg-gray-600">+</button>
       </div>
       <p class="text-sm text-gray-500 dark:text-gray-300" id="stock">Stok: <%= product.stock %></p>
@@ -248,7 +249,7 @@
 
     if (btn && desc && overlay) {
       btn.addEventListener("click", () => {
-        desc.classList.remove("max-h-[180px]", "overflow-hidden");
+        desc.classList.remove("max-h-[110px]", "overflow-hidden");
         overlay.style.display = "none";
         btn.style.display = "none";
       });

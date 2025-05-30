@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html class="scroll-smooth h-full">
+<html class="scroll-smooth h-full no-transition">
   <head>
+    <!-- Dark mode setup SEBELUM CSS di-load -->
+    <script>
+      const userPref = localStorage.getItem('dark-mode');
+      const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (userPref === 'true' || (userPref === null && systemPref)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Berkah jaya | <%= active %></title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
-      rel="stylesheet"
-    />
+
+    <!-- Hapus transisi saat awal load -->
+    <!-- <style>
+      html.no-transition *, html.no-transition *::before, html.no-transition *::after {
+        transition: none !important;
+      }
+    </style> -->
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+
+    <!-- Plugin CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
+    <!-- AOS Plugin -->
+      <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          AOS.init();
+        });
+      </script>
+
+    <!-- Kustomisasi deskripsi produk -->
     <style>
       #product-description * {
         background-color: transparent !important;
@@ -18,19 +51,15 @@
         list-style-type: decimal !important;
         padding-left: 1.25rem !important;
       }
-
       #product-description ul {
         list-style-type: disc !important;
         padding-left: 1.25rem !important;
       }
-
       #product-description li {
         margin-bottom: 0.5rem;
         display: list-item !important;
       }
-      #description-text p span {
-        color: inherit !important;
-      }
+      #description-text p span,
       #description-text ul,
       #description-text ol,
       #description-text li,
@@ -38,33 +67,24 @@
       #description-text p {
         color: inherit !important;
       }
-
+      
     </style>
   </head>
 
-  <!-- Tambahkan layout full-height dengan flex -->
-  <body class="bg-gray-100 dark:bg-gray-700 min-h-screen flex flex-col">
+  <body class="bg-gray-100 dark:bg-gray-800 min-h-screen flex flex-col transition-colors duration-500 ease-in-out">
     <%- include("../components/navbar-component") %>  
 
-    <!-- Konten fleksibel -->
     <main class="flex-grow">
-      <div class="mx-auto"><%- body %></div>
+      <div class="mx-auto"  style="overflow-x: hidden !important;"><%- body %></div>
     </main>
 
-    <!-- Footer yang selalu di bawah -->
     <footer class="bg-gray-900 text-gray-300">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8"
-      >
-        <!-- Tentang Toko -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Tentang -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Tentang Kami</h3>
-          <p class="text-sm">
-            Toko Online terpercaya yang menyediakan berbagai produk kebutuhan
-            Anda dengan harga terjangkau dan kualitas terbaik.
-          </p>
+          <p class="text-sm">Toko Online terpercaya yang menyediakan berbagai produk kebutuhan Anda dengan harga terjangkau dan kualitas terbaik.</p>
         </div>
-
         <!-- Navigasi -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Navigasi</h3>
@@ -75,87 +95,115 @@
             <li><a href="/#contact" class="hover:underline">Contact</a></li>
           </ul>
         </div>
-
         <!-- Kontak -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Contact</h3>
           <ul class="text-sm space-y-2">
-            <li>📍 Jakarta, Indonesia</li>
-            <li>📞 +62 812-3456-7890</li>
-            <li>✉️ support@tokoonline.com</li>
+            <li><i class="bi bi-geo-alt"></i> Jakarta, Indonesia</li>
+            <li><a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986"><i class="bi bi-whatsapp"></i> +62 838-3910-1886</a></li>
+            <li><i class="bi bi-envelope"></i> support@berkahjaya.id</li>
           </ul>
         </div>
-
         <!-- Sosial Media -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Follow Us</h3>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white">🌐 Facebook</a>
-            <a href="#" class="hover:text-white">📷 Instagram</a>
-            <a href="#" class="hover:text-white">🐦 Twitter</a>
+            <a href="#" class="hover:text-white  flex gap-2"><i class="bi bi-facebook"></i> <span>Facebook</span></a>
+            <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986" class="hover:text-white flex gap-2"><i class="bi bi-whatsapp"></i> <span>Whatsapp</span></a>
+            <a href="#" class="hover:text-white  flex gap-2"><i class="bi bi-instagram"></i> <span>Instagram</span></a>
           </div>
         </div>
       </div>
-
-      <!-- Copyright -->
       <div class="border-t border-gray-700 text-center text-sm py-4">
         &copy; 2025 CV Berkah Jaya. Semua hak dilindungi.
       </div>
     </footer>
 
+    <!-- Script eksternal -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script src="https://unpkg.com/taos@1.0.5/dist/taos.js"></script>
+
+    <!-- Init TAOS
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         initTAOS();
       });
+    </script> -->
+
+    <!-- Menu dropdown -->
+    <script>
       const button = document.getElementById("mega-menu-icons-dropdown-button");
       const menu = document.getElementById("mega-menu-icons-dropdown");
       button?.addEventListener("click", () => {
         menu?.classList.toggle("hidden");
       });
     </script>
+
+    <!-- Sidebar mobile -->
     <script>
-  const toggleBtn = document.getElementById('menu-toggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
+      const toggleBtn = document.getElementById('menu-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      toggleBtn?.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+      });
+      overlay?.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      });
+    </script>
 
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('-translate-x-full');
-    overlay.classList.toggle('hidden');
-  });
+    <!-- Scroll highlight link -->
+    <script>
+      window.addEventListener("scroll", () => {
+        const fromTop = window.scrollY;
+        const aboutLink = document.querySelector('a[href="/#about"]');
+        const contactLink = document.querySelector('a[href="/#contact"]');
+        const aboutSection = document.querySelector("#about");
+        const contactSection = document.querySelector("#contact");
 
-  overlay.addEventListener('click', () => {
-    sidebar.classList.add('-translate-x-full');
-    overlay.classList.add('hidden');
-  });
-</script>
-<script>
-  window.addEventListener("scroll", () => {
-    const fromTop = window.scrollY;
-    const aboutLink = document.querySelector('a[href="/#about"]');
-    const contactLink = document.querySelector('a[href="/#contact"]');
+        if (aboutSection && contactSection) {
+          const aboutTop = aboutSection.offsetTop;
+          const contactTop = contactSection.offsetTop;
 
-    const aboutSection = document.querySelector("#about");
-    const contactSection = document.querySelector("#contact");
+          if (fromTop >= aboutTop && fromTop < contactTop) {
+            aboutLink.classList.add("text-blue-700");
+            contactLink.classList.remove("text-blue-700");
+          } else if (fromTop >= contactTop) {
+            contactLink.classList.add("text-blue-700");
+            aboutLink.classList.remove("text-blue-700");
+          } else {
+            aboutLink.classList.remove("text-blue-700");
+            contactLink.classList.remove("text-blue-700");
+          }
+        }
+      });
+    </script>
 
-    if (aboutSection && contactSection) {
-      const aboutTop = aboutSection.offsetTop;
-      const contactTop = contactSection.offsetTop;
+    <!-- Sinkronisasi dark mode toggle -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const switches = document.querySelectorAll('.light-switch');
+        const isDark = localStorage.getItem('dark-mode') === 'true';
 
-      if (fromTop >= aboutTop && fromTop < contactTop) {
-        aboutLink.classList.add("text-blue-700");
-        contactLink.classList.remove("text-blue-700");
-      } else if (fromTop >= contactTop) {
-        contactLink.classList.add("text-blue-700");
-        aboutLink.classList.remove("text-blue-700");
-      } else {
-        aboutLink.classList.remove("text-blue-700");
-        contactLink.classList.remove("text-blue-700");
-      }
-    }
-  });
-</script>
+        switches.forEach(sw => {
+          sw.checked = isDark;
+          sw.addEventListener('change', () => {
+            const checked = sw.checked;
+            switches.forEach(s => s.checked = checked);
+            document.documentElement.classList.toggle('dark', checked);
+            localStorage.setItem('dark-mode', checked);
+          });
+        });
+      });
+    </script>
 
+    <!-- Hapus no-transition setelah load -->
+    <script>
+      window.addEventListener('load', () => {
+        document.documentElement.classList.remove('no-transition');
+      });
+    </script>
   </body>
 </html>

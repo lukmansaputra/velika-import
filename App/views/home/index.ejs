@@ -1,14 +1,20 @@
 <%- include("../components/hero-component") %>
 
-<section id="products" class="dark:bg-gray-800 py-20 px-4 md:px-12 mx-auto">
+<section id="products" class="dark:bg-gray-800 py-20 px-4 md:px-12 mx-auto"
+>
   <div class="max-w-6xl mx-auto">
     <h2 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12">
-      Our Products
+      <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
+          Our Products
+      </div>
+
     </h2>
 
     <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
-     <% products.slice(0, 6).forEach(product => { %>
-        <a href="/product/overview/<%= product.slug %>" class="cursor-pointer relative group rounded-lg overflow-hidden shadow-lg">
+
+     <% products.slice(0, 7).forEach((product, i) => { %>
+      <div data-aos="fade-up" data-aos-delay="<%= 200 * i %>" data-aos-duration="600" class="rounded-lg overflow-hidden">
+        <a href="/product/overview/<%= product.slug %>" class="cursor-pointer relative group shadow-lg">
           <img
             class="h-[10rem] md:h-[15rem] w-full object-cover"
             src="<%= product.images[0] %>"
@@ -18,13 +24,17 @@
             <span class="text-white text-lg font-semibold">View Product</span>
           </div>
         </a>
-      <% }); %>
+      </div>
+    <% }); %>
+
 
 
       <!-- See More Card -->
-      <a href="/product" class="flex items-center justify-center border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-lg text-center p-8 hover:border-indigo-500 transition">
-        <span class="text-lg font-bold text-gray-700 dark:text-gray-200">See more...</span>
-      </a>
+       <div  data-aos="fade-up" data-aos-delay="1400" data-aos-duration="600">
+         <a href="/product" class="flex items-center justify-center border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-lg text-center p-8 hover:border-indigo-500 transition">
+           <span class="text-lg font-bold text-gray-700 dark:text-gray-200">See more...</span>
+         </a>
+       </div>
     </div>
   </div>
 </section>
@@ -35,12 +45,15 @@
   <div class="max-w-6xl mx-auto">
     <h2
       class="text-4xl font-bold text-center text-gray-900 dark:text-gray-100 mb-12"
+            data-aos="fade-up" data-aos-delay="200" data-aos-duration="600"
+
     >
       Store Info
     </h2>
     <div class="grid md:grid-cols-2 gap-10 items-center">
       <!-- Text Content -->
-      <div>
+      <div data-aos="fade-right" data-aos-delay="200" data-aos-duration="600"
+>
         <h3
           class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4"
         >
@@ -56,7 +69,8 @@
         </button> -->
       </div>
       <!-- Image -->
-      <div>
+      <div data-aos="fade-left" data-aos-delay="600" data-aos-duration="600"
+>
         <img
           src="/img/store.png"
           alt="Store"
@@ -67,7 +81,7 @@
 
     <!-- Features -->
     <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
-      <div>
+      <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
         <div
           class="text-white bg-indigo-600 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 font-bold"
         >
@@ -80,7 +94,7 @@
           Carefully selected items from reputable brands to ensure quality.
         </p>
       </div>
-      <div>
+      <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="600">
         <div
           class="text-white bg-indigo-600 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 font-bold"
         >
@@ -93,7 +107,7 @@
           Efficient and reliable delivery straight to your door.
         </p>
       </div>
-      <div>
+      <div data-aos="fade-up" data-aos-delay="600" data-aos-duration="600">
         <div
           class="text-white bg-indigo-600 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 font-bold"
         >
@@ -114,38 +128,38 @@
 
 <section id="contact" class="bg-gray-100 dark:bg-gray-800 py-20 px-4 md:px-12">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12">
+    <h2 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
       Contact Us
     </h2>
 
     <div class="grid md:grid-cols-2 gap-12">
       <!-- Contact Info -->
-      <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+      <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8" data-aos="fade-left" data-aos-delay="200" data-aos-duration="600">
         <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Store Information</h3>
-        <p class="text-gray-600 dark:text-gray-300 mb-4">
+        <p class="text-gray-600 dark:text-gray-300 mb-4" data-aos="fade-right" data-aos-delay="400" data-aos-duration="600">
           <strong>Address:</strong><br />
           Jl. Example No.123, Jakarta, Indonesia
         </p>
-        <p class="text-gray-600 dark:text-gray-300 mb-4">
+        <p class="text-gray-600 dark:text-gray-300 mb-4" data-aos="fade-right" data-aos-delay="600" data-aos-duration="600">
           <strong>Phone:</strong><br />
           +62 812-3456-7890
         </p>
-        <p class="text-gray-600 dark:text-gray-300 mb-8">
+        <p class="text-gray-600 dark:text-gray-300 mb-8" data-aos="fade-right" data-aos-delay="800" data-aos-duration="600">
           <strong>Email:</strong><br />
           contact@example.com
         </p>
 
         <!-- Social Media -->
-        <div class="">
+        <div >
           <p class="text-gray-800 dark:text-gray-200  font-medium mb-2">Follow us:</p>
           <div class="flex space-x-4">
-            <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986" class="hover:text-green-600 dark:text-gray-300 text-md" aria-label="Whatsapp">
+            <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986" class="hover:text-green-600 dark:text-gray-300 text-md" aria-label="Whatsapp" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="600">
               <i class="bi bi-whatsapp text-2xl"></i>
             </a>
-            <a href="#" class="hover:text-pink-600 dark:text-gray-300" aria-label="Instagram">
+            <a href="#" class="hover:text-pink-600 dark:text-gray-300" aria-label="Instagram" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="600">
               <i class="bi bi-instagram text-2xl"></i>
             </a>
-            <a href="#" class="hover:text-blue-400 dark:text-gray-300" aria-label="Twitter">
+            <a href="#" class="hover:text-blue-400 dark:text-gray-300" aria-label="Twitter" data-aos="zoom-in" data-aos-delay="800" data-aos-duration="600">
              <i class="bi bi-facebook text-2xl"></i>
             </a>
           </div>
@@ -153,7 +167,7 @@
       </div>
 
       <!-- Contact Form -->
-      <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+      <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8" data-aos="fade-right" data-aos-delay="200" data-aos-duration="600">
         <form class="space-y-6">
           <div>
             <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -182,6 +196,7 @@
           <button
             type="submit"
             class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition"
+            data-aos="flip-right" data-aos-delay="600" data-aos-duration="600"
           >
             Send Message
           </button>

@@ -6,7 +6,6 @@ router.get("/:productSlug", async (req, res) => {
   try {
     const product = await db.getProductBySlug(req.params.productSlug);
     const p = product.data;
-    console.log(p);
 
     // Bersihkan warna teks HTML
     p.description = p.description
@@ -15,8 +14,6 @@ router.get("/:productSlug", async (req, res) => {
         /<(ul|ol|li|p|span)([^>]*)>/g,
         '<$1 class="text-gray-900 dark:text-gray-300"$2>'
       );
-
-    console.log(p.description);
 
     // Cek apakah diskon aktif berdasarkan waktu
     const now = new Date();
