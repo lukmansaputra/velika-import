@@ -65,12 +65,31 @@ class Database {
     width = null,
     height = null,
     weight = null,
+    is_discount = false,
+    discount_percent = 0,
+    discount_start = null,
+    discount_end = null,
+    stock = 0,
     images = [],
   }) {
     const { data, error } = await supabase
       .from("products")
       .insert([
-        { category_id, name, slug, description, price, width, height, weight },
+        {
+          category_id,
+          name,
+          slug,
+          description,
+          price,
+          width,
+          height,
+          weight,
+          is_discount,
+          discount_percent,
+          discount_start,
+          discount_end,
+          stock,
+        },
       ])
       .select("id")
       .single();
@@ -117,11 +136,7 @@ class Database {
     const { data, error } = await supabase
       .from("products")
       .select(
-        `
-      *,
-      category:categories (name, slug),
-      images:product_images (image_path)
-    `
+        `*, category:categories (name, slug), images:product_images (image_path)`
       )
       .eq("slug", slug)
       .single();
@@ -165,8 +180,8 @@ class Database {
       .from("products")
       .select(
         `*, 
-       categories!inner (name, slug), 
-       product_images (image_path)`
+         categories!inner (name, slug), 
+         product_images (image_path)`
       )
       .order(sortColumn, { ascending });
 
@@ -198,6 +213,11 @@ class Database {
       width = null,
       height = null,
       weight = null,
+      is_discount = false,
+      discount_percent = 0,
+      discount_start = null,
+      discount_end = null,
+      stock = 0,
       images = [],
     }
   ) {
@@ -212,6 +232,11 @@ class Database {
         width,
         height,
         weight,
+        is_discount,
+        discount_percent,
+        discount_start,
+        discount_end,
+        stock,
       })
       .eq("id", id);
 

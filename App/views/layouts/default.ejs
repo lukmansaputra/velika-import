@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Berkah jaya | <%= active %></title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
@@ -27,13 +28,23 @@
         margin-bottom: 0.5rem;
         display: list-item !important;
       }
+      #description-text p span {
+        color: inherit !important;
+      }
+      #description-text ul,
+      #description-text ol,
+      #description-text li,
+      #description-text span,
+      #description-text p {
+        color: inherit !important;
+      }
+
     </style>
   </head>
 
   <!-- Tambahkan layout full-height dengan flex -->
   <body class="bg-gray-100 dark:bg-gray-700 min-h-screen flex flex-col">
-    <% if (typeof hideNavbar === 'undefined' || !hideNavbar) { %> <%-
-    include("../components/navbar-component") %> <% } %>
+    <%- include("../components/navbar-component") %>  
 
     <!-- Konten fleksibel -->
     <main class="flex-grow">
@@ -119,5 +130,32 @@
     overlay.classList.add('hidden');
   });
 </script>
+<script>
+  window.addEventListener("scroll", () => {
+    const fromTop = window.scrollY;
+    const aboutLink = document.querySelector('a[href="/#about"]');
+    const contactLink = document.querySelector('a[href="/#contact"]');
+
+    const aboutSection = document.querySelector("#about");
+    const contactSection = document.querySelector("#contact");
+
+    if (aboutSection && contactSection) {
+      const aboutTop = aboutSection.offsetTop;
+      const contactTop = contactSection.offsetTop;
+
+      if (fromTop >= aboutTop && fromTop < contactTop) {
+        aboutLink.classList.add("text-blue-700");
+        contactLink.classList.remove("text-blue-700");
+      } else if (fromTop >= contactTop) {
+        contactLink.classList.add("text-blue-700");
+        aboutLink.classList.remove("text-blue-700");
+      } else {
+        aboutLink.classList.remove("text-blue-700");
+        contactLink.classList.remove("text-blue-700");
+      }
+    }
+  });
+</script>
+
   </body>
 </html>

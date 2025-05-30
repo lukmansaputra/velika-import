@@ -23,7 +23,24 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  if (req.path.startsWith("/product")) {
+    res.locals.active = "product";
+  } else if (req.path === "/") {
+    res.locals.active = "home";
+  } else if (req.path.includes("#about")) {
+    res.locals.active = "about";
+  } else if (req.path.includes("#contact")) {
+    res.locals.active = "contact";
+  }
+  next();
+});
+
 app.use("/", mainRoutes);
+
+app.use((req, res) => {
+  res.status(404).render("error/404", { url: req.originalUrl });
+});
 
 // Jalankan server
 app.listen(port, () => {

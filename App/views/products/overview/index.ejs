@@ -51,48 +51,86 @@
     </div>
   </div>
 
-  <!-- Product Info -->
-  <div class="space-y-4">
-    <h1 class="text-xl font-bold"><%= product.name %></h1>
-    <div class="flex items-center gap-4 text-sm text-gray-600">
-      <span>Terjual 245</span>
-      <span class="text-yellow-500">★ 234</span>
+ <!-- Product Info -->
+<div class="space-y-4">
+  <h1 class="text-xl font-bold dark:text-gray-200"><%= product.name %></h1>
+
+  <!-- Harga & Diskon -->
+  <div class="space-y-1">
+  <% if (product.is_discount_active) { %>
+        <span class="text-red-500 text-lg font-semibold">
+          Rp<%= (product.price * (1 - product.discount_percent / 100)).toLocaleString('id-ID') %>
+        </span>
+        <span class="line-through text-gray-400">
+          Rp<%= product.price.toLocaleString('id-ID') %>
+        </span>
+        <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">
+          -<%= product.discount_percent %>%
+        </span>
+        <p class="text-sm text-gray-500">
+          Berlaku dari <%= new Date(product.discount_start).toLocaleDateString('id-ID') %>
+          sampai <%= new Date(product.discount_end).toLocaleDateString('id-ID') %>
+        </p>
+      <% } else { %>
+        <span class="text-red-500 text-lg font-semibold">
+          Rp<%= product.price.toLocaleString('id-ID') %>
+        </span>
+      <% } %>
     </div>
 
-    <div class="space-y-1">
-      <span class="text-red-500 text-lg font-semibold">Rp<%= product.price.toLocaleString('id-ID') %></span>
-      <span class="line-through text-gray-400">Rp110.000</span>
-      <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">-85%</span>
+  <div class="pt-4 border-t dark:text-gray-300">
+    <p class="font-semibold">Spesifikasi Produk:</p>
+    <ul>
+      <li>- Berat: <%= product.weight %>gr</li>
+      <li>- Tinggi: <%= product.height %>gr</li>
+      <li>- Lebar: <%= product.width %>gr</li>
+    </ul>
+    <p class="font-semibold">Deskripsi Produk:</p>
+    <div id="product-description" class="max-h-[180px] overflow-hidden relative text-gray-300 text-sm whitespace-pre-line">
+      <p id="description-text" class="text-black dark:text-white"><%- product.description %></p>
+      <div id="fade-overlay" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-100 to-transparent dark:bg-gradient-to-t dark:from-gray-700"></div>
     </div>
-
-    <div class="pt-4 border-t">
-      <p class="font-semibold">Deskripsi Produk:</p>
-      <div id="product-description" class="max-h-[180px] overflow-hidden relative text-gray-700 text-sm whitespace-pre-line">
-        <p id="description-text" style="background-color: transparent !important;"><%- product.description %></p>
-        <div id="fade-overlay" class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-100 to-transparent"></div>
-      </div>
-      <button id="read-more-btn" class="text-blue-600 mt-2 text-sm cursor-pointer">Baca selengkapnya</button>
-    </div>
+    <button id="read-more-btn" class="text-blue-600 mt-2 text-sm cursor-pointer">Baca selengkapnya</button>
   </div>
+</div>
+
 
   <!-- Sticky Checkout -->
   <div class="relative">
-    <div class="sticky top-28 p-4 border rounded-lg shadow-md bg-white space-y-4">
+    <div class="sticky top-28 p-4 border rounded-lg shadow-md bg-white dark:bg-gray-800 dark:text-gray-300 space-y-4">
       <p class="text-sm">Atur jumlah dan catatan</p>
       <div class="flex items-center gap-2">
-        <button id="min" class="bg-blue-200 px-3 cursor-pointer py-1 rounded">-</button>
+        <button id="min" class="bg-blue-200 dark:bg-gray-600 px-3 cursor-pointer py-1 rounded dark:border">-</button>
         <input type="number" id="value" value="1" class="w-12 text-center border rounded" />
-        <button id="plus" class="bg-blue-200 cursor-pointer px-3 py-1 rounded">+</button>
+        <button id="plus" class="bg-blue-200 cursor-pointer px-3 py-1 rounded dark:border dark:bg-gray-600">+</button>
       </div>
-      <p class="text-sm text-gray-500">Stok: 453</p>
+      <p class="text-sm text-gray-500 dark:text-gray-300" id="stock">Stok: <%= product.stock %></p>
 
       <div class="space-y-2">
-        <p class="font-semibold text-red-500 text-lg">Rp<%= product.price.toLocaleString('id-ID') %></p>
+        <% if (product.is_discount_active) { %>
+            <span class="text-red-500 text-lg font-semibold">
+              Rp<%= (product.price * (1 - product.discount_percent / 100)).toLocaleString('id-ID') %>
+            </span>
+            <span class="line-through text-gray-400">
+              Rp<%= product.price.toLocaleString('id-ID') %>
+            </span>
+            <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">
+              -<%= product.discount_percent %>%
+            </span>
+            <p class="text-sm text-gray-500">
+              Berlaku dari <%= new Date(product.discount_start).toLocaleDateString('id-ID') %>
+              sampai <%= new Date(product.discount_end).toLocaleDateString('id-ID') %>
+            </p>
+          <% } else { %>
+            <span class="text-red-500 text-lg font-semibold">
+              Rp<%= product.price.toLocaleString('id-ID') %>
+            </span>
+          <% } %>
         <div class="flex gap-2">
           <!-- <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
             + Keranjang
           </button> -->
-          <a target="_blank" href="https://api.whatsapp.com/send?phone=6281585392717&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://express-two-azure.vercel.app/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
+          <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://express-two-azure.vercel.app/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
             Beli
           </a>
         </div>
@@ -121,9 +159,19 @@
     });
 
     plusButton.addEventListener("click", () => {
+      const stock = document.getElementById("stock").innerText.split(":")[1].trim();
       let currentValue = parseInt(valueInput.value) || 0;
-      valueInput.value = currentValue + 1;
-      minButton.disabled = false; // aktifkan kembali tombol minus
+      if (currentValue === stock) {
+        console.log("melebihi batas stock");
+        
+        plusButton.disabled = true;
+      } else {
+        valueInput.value = currentValue + 1;
+        minButton.disabled = false; // aktifkan kembali tombol minus
+        plusButton.disabled = false;
+      }
+
+      
     });
     // Carousel
     let currentIndex = 0;

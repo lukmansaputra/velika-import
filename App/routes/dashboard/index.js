@@ -16,7 +16,7 @@ router.use(
     secret: "secretadminkey",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 30 * 60 * 1000 }, // 30 menit
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }, // 1 minggu dalam milidetik
   })
 );
 

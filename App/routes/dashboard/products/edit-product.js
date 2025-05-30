@@ -56,9 +56,15 @@ router.post("/", upload.array("images"), async (req, res) => {
     item_width,
     item_height,
     item_weight,
+    is_discount,
+    discount_percent,
+    discount_start,
+    discount_end,
+    stock,
     description,
     category_id,
   } = req.body;
+  console.log(req.body);
 
   // Handle existing images
   const existingImages = Array.isArray(req.body["existing_images"])
@@ -96,7 +102,7 @@ router.post("/", upload.array("images"), async (req, res) => {
     const finalImages = [...existingImages, ...newImageUrls];
 
     // Update ke database
-    await db.updateProduct(product_id, {
+    const t = await db.updateProduct(product_id, {
       category_id,
       name: product_name,
       slug: replaceSpacesWithHyphens(product_name),
@@ -104,9 +110,15 @@ router.post("/", upload.array("images"), async (req, res) => {
       width: item_width,
       height: item_height,
       weight: item_weight,
+      is_discount,
+      discount_percent,
+      discount_start,
+      discount_end,
+      stock,
       description,
       images: finalImages,
     });
+    console.log(t);
 
     res.status(200).json({ success: true });
   } catch (err) {

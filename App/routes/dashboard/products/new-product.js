@@ -30,7 +30,14 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       product_price,
       description,
       category_id,
+      is_discount,
+      discount_percent,
+      discount_start,
+      discount_end,
+      stock,
     } = req.body;
+    console.log(req.body);
+    console.log(req.files);
 
     const uploadedUrls = [];
 
@@ -66,7 +73,13 @@ router.post("/", upload.array("images", 5), async (req, res) => {
       width: item_width,
       height: item_height,
       weight: item_weight,
+      is_discount,
+      discount_percent,
+      discount_start,
+      discount_end,
+      stock,
     });
+    console.log(result);
 
     res.status(200).json({ message: "Product created", data: result });
   } catch (err) {

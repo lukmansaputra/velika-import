@@ -39,7 +39,7 @@
                      <td class="px-6 py-4"><%= product.price %></td>
                      <td class="px-6 py-4 flex justify-evenly gap-1">
                        <a href="/dashboard/product/edit-product/<%= product.id %>" class="text-blue-600 hover:underline">Edit</a>
-                       <a href="/product/overview/<%= product.slug %>" class="text-blue-600 hover:underline">See</a>
+                       <a href="/product/overview/<%= product.slug %>" target="_blank" class="text-blue-600 hover:underline">See</a>
                        <button class="remove-btn text-red-600 hover:underline" data-id="<%= product.id %>">Remove</button>
                      </td>
                    </tr>

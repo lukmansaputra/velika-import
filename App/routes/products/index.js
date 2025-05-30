@@ -3,6 +3,11 @@ const router = express.Router();
 const overviewHandle = require("./overview");
 const db = require("../../database");
 
+router.use((req, res, next) => {
+  res.locals.active = "product"; // set layout admin otomatis
+  next();
+});
+
 router.use("/overview", overviewHandle);
 
 router.get("/", async (req, res) => {
@@ -19,6 +24,7 @@ router.get("/", async (req, res) => {
     categories: categories.data,
     sort,
     selectedCategory: category,
+    active: "product",
   });
 });
 
