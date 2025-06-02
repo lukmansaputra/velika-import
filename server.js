@@ -3,9 +3,8 @@ const expressLayouts = require("express-ejs-layouts");
 const app = express();
 const path = require("path");
 const cors = require("cors");
-const webName = "GOLDEN IMPORT";
-const webUrl = "";
 const mainRoutes = require("./App/routes");
+const db = require("./App/database");
 
 const port = process.env.PORT || 8080;
 
@@ -33,6 +32,15 @@ app.use(
   })
 );
 
+// Custom middleware
+
+app.use(async (req, res, next) => {
+  const data = await db.getAllSettings();
+
+  res.locals.website = data.data[0];
+  next();
+});
+
 app.use((req, res, next) => {
   if (req.path.startsWith("/product")) {
     res.locals.active = "product";
@@ -45,12 +53,6 @@ app.use((req, res, next) => {
   } else {
     res.locals.active = ""; // fallback biar tidak undefined
   }
-  next();
-});
-
-app.use((req, res, next) => {
-  res.locals.webName = webName;
-  res.locals.webUrl = webUrl;
   next();
 });
 

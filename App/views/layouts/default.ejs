@@ -29,7 +29,7 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= webName %> | <%= active %></title>
+    <title><%= website.website_name %> | <%= active %></title>
 
 
     <!-- Tailwind CDN -->
@@ -127,7 +127,7 @@
           <ul class="text-sm space-y-2">
             <li><i class="bi bi-geo-alt"></i> Jakarta, Indonesia</li>
             <li><a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986"><i class="bi bi-whatsapp"></i> +62 838-3910-1886</a></li>
-            <li><i class="bi bi-envelope"></i> support@berkahjaya.id</li>
+            <li><i class="bi bi-envelope"></i> <%= website.email %></li>
           </ul>
         </div>
         <!-- Sosial Media -->
@@ -141,7 +141,7 @@
         </div>
       </div>
       <div class="border-t border-gray-700 text-center text-sm py-4">
-        &copy; 2025 <%= webName %>. Semua hak dilindungi.
+        &copy; 2025 <%= website.website_name %>. Semua hak dilindungi.
       </div>
     </footer>
 
