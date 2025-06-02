@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const productsHandle = require("./products");
 const categoriesHandle = require("./categories");
+const settingsHandle = require("./settings");
 const db = require("../../database");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -28,6 +29,7 @@ router.use((req, res, next) => {
 
 router.use("/product", productsHandle);
 router.use("/category", categoriesHandle);
+router.use("/settings", settingsHandle);
 
 // Load admin credentials
 const loadAdmin = () => {

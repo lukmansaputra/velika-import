@@ -3,7 +3,8 @@ const expressLayouts = require("express-ejs-layouts");
 const app = express();
 const path = require("path");
 const cors = require("cors");
-
+const webName = "GOLDEN IMPORT";
+const webUrl = "";
 const mainRoutes = require("./App/routes");
 
 const port = process.env.PORT || 8080;
@@ -41,14 +42,25 @@ app.use((req, res, next) => {
     res.locals.active = "about";
   } else if (req.path.includes("#contact")) {
     res.locals.active = "contact";
+  } else {
+    res.locals.active = ""; // fallback biar tidak undefined
   }
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.webName = webName;
+  res.locals.webUrl = webUrl;
   next();
 });
 
 app.use("/", mainRoutes);
 
 app.use((req, res) => {
-  res.status(404).render("error/404", { url: req.originalUrl });
+  res.status(404).render("error/404", {
+    code: 404,
+    message: "Halaman tidak tersedia atau telah dipindahkan.",
+  });
 });
 
 // Jalankan server

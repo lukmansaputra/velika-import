@@ -202,6 +202,70 @@ class Database {
     return { success: true, data: formatted };
   }
 
+  async getAllFilterProducts({
+    sort = "newest",
+    categorySlug = null,
+    page = 1,
+    limit = 10,
+  } = {}) {
+    // kasih default empty object supaya aman jika dipanggil tanpa argumen
+    let sortColumn = "created_at";
+    let ascending = false;
+
+    if (sort === "price_asc") {
+      sortColumn = "price";
+      ascending = true;
+    } else if (sort === "price_desc") {
+      sortColumn = "price";
+      ascending = false;
+    } else if (sort === "oldest") {
+      sortColumn = "created_at";
+      ascending = true;
+    }
+
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    let query = supabase
+      .from("products")
+      .select(`*, categories!inner (name, slug), product_images (image_path)`, {
+        count: "exact",
+      })
+      .order(sortColumn, { ascending })
+      .range(from, to);
+
+    if (categorySlug) {
+      query = query.eq("categories.slug", categorySlug);
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return { success: false, message: error.message, data: [] };
+    }
+
+    // pastikan data selalu array, jika undefined, beri array kosong
+    const safeData = Array.isArray(data) ? data : [];
+
+    const formatted = safeData.map((item) => ({
+      ...item,
+      category: item.categories,
+      images: item.product_images?.map((i) => i.image_path) || [],
+    }));
+
+    const totalPages = count ? Math.ceil(count / limit) : 1;
+
+    return {
+      success: true,
+      data: formatted,
+      pagination: {
+        total: count || 0,
+        page,
+        totalPages,
+      },
+    };
+  }
+
   async updateProduct(
     id,
     {
@@ -281,6 +345,30 @@ class Database {
 
     if (error) return { success: false, message: error.message };
     return { success: true, message: "Product deleted successfully." };
+  }
+
+  /** ========== WEBSITE SETTINGS ========== */
+  async getAllSettings() {
+    const { data, error } = await supabase.from("website_settings").select("*");
+    if (error) return { success: false, message: error.message };
+    return { success: true, data };
+  }
+
+  async updateSetting(key, value) {
+    // Buat object update dinamis berdasarkan key dan value
+    const updateData = {};
+    updateData[key] = value;
+
+    // Update row yang ID-nya 1 (asumsikan hanya 1 row settings)
+    const { data, error } = await supabase
+      .from("website_settings")
+      .update(updateData)
+      .eq("id", 1);
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true, message: "Setting updated." };
   }
 }
 

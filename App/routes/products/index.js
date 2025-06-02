@@ -13,11 +13,20 @@ router.use("/overview", overviewHandle);
 router.get("/", async (req, res) => {
   const sort = req.query.sort || "newest";
   const category = req.query.category || null;
+  const page = parseInt(req.query.page) || 1;
+  const limit = 15;
 
   const [productsResult, categoriesResult] = await Promise.all([
-    db.getAllProducts(sort, category),
+    db.getAllFilterProducts({ sort, categorySlug: category, page, limit }),
     db.getAllCategories(),
   ]);
+
+  if (!productsResult.success || !categoriesResult.success) {
+    return res.status(404).render("error/404", {
+      code: 404,
+      message: `Halaman ${page} tidak ditemukan.`,
+    });
+  }
 
   const now = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
@@ -36,7 +45,7 @@ router.get("/", async (req, res) => {
     categories: categoriesResult.data,
     sort,
     selectedCategory: category,
-    active: "product",
+    pagination: productsResult.pagination,
   });
 });
 

@@ -29,7 +29,7 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Berkah jaya | <%= active %></title>
+    <title><%= webName %> | <%= active %></title>
 
 
     <!-- Tailwind CDN -->
@@ -38,9 +38,23 @@
     <script>
       tailwind.config = {
         darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: 'var(--primary)',
+              secondary: 'var(--secondary)',
+              third: 'var(--third)',
+              four: 'var(--four)',
+              card: '#fffaf0'
+            },
+            fontFamily: {
+              spartan: ['"League Spartan"', 'sans-serif'],
+            },
+          },
+        },
       }
     </script>
-
+    <link rel="stylesheet" href="/css/global.css">
     <!-- Plugin CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -83,7 +97,7 @@
     </style>
   </head>
 
-  <body class="bg-gray-100 dark:bg-gray-800 min-h-screen flex flex-col transition-colors duration-500 ease-in-out">
+  <body class="bg-primary dark:bg-gray-800 min-h-screen flex flex-col transition-colors duration-500 ease-in-out">
     <%- include("../components/navbar-component") %>  
 
     <main class="flex-grow">
@@ -127,7 +141,7 @@
         </div>
       </div>
       <div class="border-t border-gray-700 text-center text-sm py-4">
-        &copy; 2025 CV Berkah Jaya. Semua hak dilindungi.
+        &copy; 2025 <%= webName %>. Semua hak dilindungi.
       </div>
     </footer>
 
