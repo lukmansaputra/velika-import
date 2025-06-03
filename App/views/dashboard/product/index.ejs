@@ -31,19 +31,25 @@
                    </tr>
                </thead>
                <tbody class="text-[0.6rem] md:text-xs">
-               <% if (data && data.data.length > 0) { %>
+               <% if (data && data.length > 0) { %>
                  <% let a = 1; %>
-                 <% data.data.forEach(product => { %>
+                 <% data.forEach(product => { %>
                    <tr id="product-<%= product.id %>" class="bg-white border-b hover:bg-gray-50">
                      <th class="px-6 py-4 font-medium"><%= a++ %></th>
 <td class="px-6 py-4 max-w-[200px] truncate" title="<%= product.name %>">
   <%= product.name %>
 </td>                     <td class="px-6 py-4"><%= product.category?.name || '-' %></td>
                      <td class="px-6 py-4"><%= product.stock %></td>
-                     <td class="px-6 py-4">Rp<%= product.price.toLocaleString('id-ID') %></td>
+                    <% if (product.is_discount_active) {
+                      const discountPrice = Math.round(product.price * (1 - product.discount_percent / 100));
+                    %>
+                      <td class="px-6 py-4 text-red-500"><%= formatCurrency(discountPrice, website.mata_uang) %> <span class="text-[0.65rem] md:text-xs line-through text-gray-400"><%= formatCurrency(product.price, website.mata_uang) %></span></td>
+                    <% } else {%>
+                        <td class="px-6 py-4"><%= formatCurrency(product.price, website.mata_uang) %></td>
+                    <%} %>
                      <td class="px-6 py-4 flex justify-evenly gap-1">
                        <a href="/dashboard/product/edit-product/<%= product.id %>" class="text-blue-600 hover:underline">Edit</a>
-                       <a href="/product/overview/<%= product.slug %>" target="_blank" class="text-blue-600 hover:underline">See</a>
+                       <a href="/product/overview/<%= encodeURIComponent(product.slug) %>" target="_blank" class="text-blue-600 hover:underline">See</a>
                        <button class="remove-btn text-red-600 hover:underline" data-id="<%= product.id %>">Remove</button>
                      </td>
                    </tr>

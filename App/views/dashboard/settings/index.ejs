@@ -8,7 +8,7 @@
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Website Name</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.website_name %></p>
+            <p class="text-base text-gray-800 view-mode"><%= data.website_name %></p>
             <div class="relative z-0 w-full group hidden edit-mode">
               <input type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.website_name %>" />
             </div>
@@ -24,11 +24,11 @@
       </li>
 
       <!-- Tambahkan setting lainnya seperti ini -->
-      <li class="py-4" data-key="Website URL">
+      <li class="py-4" data-key="website_url">
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Website URL</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.website_url %></p>
+            <p class="text-base text-gray-800 view-mode"><%= data.website_url %></p>
             <div class="relative z-0 w-full group hidden edit-mode">
               <input type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.website_url %>" />
             </div>
@@ -46,7 +46,7 @@
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Email</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.email %></p>
+            <p class="text-base text-gray-800 view-mode"><%= data.email %></p>
             <div class="relative z-0 w-full group hidden edit-mode">
               <input type="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.email %>" />
             </div>
@@ -64,9 +64,15 @@
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Telp/Whatsapp</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.telp %></p>
-            <div class="relative z-0 w-full group hidden edit-mode">
-              <input type="number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.telp %>" />
+            <span id="country_code" class="inline-flex items-center px-3 text-sm text-gray-900 border-r border-gray-300">
+              +62
+            </span>
+            <span class="text-base text-gray-800 view-mode"><%= data.telp %></span>
+            <div class="flex z-0 w-full group hidden edit-mode">
+              <span class="inline-flex text-sm items-center px-3 text-gray-900 border-r border-gray-300">
+                +62
+              </span>
+              <input type="number" class="block px-1 py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.telp %>" />
             </div>
           </div>
           <button class="text-gray-500 hover:text-blue-600 ml-4 edit-toggle">
@@ -82,7 +88,7 @@
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Instagram</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.instagram %></p>
+            <p class="text-base text-gray-800 view-mode"><%= data.instagram %></p>
             <div class="relative z-0 w-full group hidden edit-mode">
               <input type="instagram" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.instagram %>" />
             </div>
@@ -100,9 +106,27 @@
         <div class="flex justify-between items-start">
           <div class="w-full">
             <p class="text-sm text-gray-500 mb-1">Facebook</p>
-            <p class="text-base font-medium text-gray-800 view-mode"><%= data.facebook %></p>
+            <p class="text-base text-gray-800 view-mode"><%= data.facebook %></p>
             <div class="relative z-0 w-full group hidden edit-mode">
               <input type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value=<%= data.facebook %>" />
+            </div>
+          </div>
+          <button class="text-gray-500 hover:text-blue-600 ml-4 edit-toggle">
+            <i class="text-xl bi bi-pencil-square"></i>
+          </button>
+        </div>
+        <div class="flex gap-2 mt-3 hidden edit-mode">
+          <button class="save-btn text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">Simpan</button>
+          <button class="cancel-btn text-sm bg-gray-300 text-gray-800 px-4 py-1.5 rounded-lg hover:bg-gray-400">Batal</button>
+        </div>
+      </li>
+      <li class="py-4" data-key="address">
+        <div class="flex justify-between items-start">
+          <div class="w-full">
+            <p class="text-sm text-gray-500 mb-1">Address</p>
+            <p class="text-base text-gray-800 view-mode"><%= data.address %></p>
+            <div class="relative z-0 w-full group hidden edit-mode">
+              <input type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-blue-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value="<%= data.address %>" />
             </div>
           </div>
           <button class="text-gray-500 hover:text-blue-600 ml-4 edit-toggle">
@@ -120,7 +144,7 @@
             <p class="text-sm text-gray-500 mb-1">Currency</p>
             <% currency.forEach(element => {%>
                 <% if (element.value === data.mata_uang) {%>
-                    <p class="text-base font-medium text-gray-800 view-mode"><%= element.label  %></p>
+                    <p class="text-base text-gray-800 view-mode"><%= element.label  %></p>
                 <%} %>
             <% }); %>
             <div class="relative z-0 w-full group hidden edit-mode">
@@ -128,7 +152,6 @@
                     <% currency.forEach(item => {%>
                         <% if (item.value === data.mata_uang) {%>
                             <option value="<%= data.mata_uang %>" selected><%= item.label %></option>
-
                         <% } else {%>
                             <option value="<%= item.value %>"><%= item.label %></option>
                         <%} %>
@@ -145,10 +168,6 @@
             <button class="cancel-btn text-sm bg-gray-300 text-gray-800 px-4 py-1.5 rounded-lg hover:bg-gray-400">Batal</button>
         </div>
         </li>
-
-
-      <!-- Kamu bisa duplikat elemen <li> di atas untuk URL, telp, instagram, dll -->
-
     </ul>
   </div>
 
@@ -156,6 +175,12 @@
   document.querySelectorAll('.edit-toggle').forEach(button => {
     button.addEventListener('click', () => {
       const li = button.closest('li');
+      console.log(li.dataset.key);
+      
+      if (li.dataset.key === 'telp') {
+        document.getElementById("country_code").classList.add("hidden")
+      }
+      
       li.querySelector('.view-mode').classList.add('hidden');
       li.querySelectorAll('.edit-mode').forEach(el => el.classList.remove('hidden'));
     });
@@ -164,6 +189,9 @@
   document.querySelectorAll('.cancel-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const li = btn.closest('li');
+      if (li.dataset.key === 'telp') {
+        document.getElementById("country_code").classList.remove("hidden")
+      }
       const input = li.querySelector('input, select');
       const view = li.querySelector('.view-mode');
       input.value = view.textContent.trim();
@@ -178,7 +206,15 @@
       const input = li.querySelector('input, select');
       const view = li.querySelector('.view-mode');
       const key = li.dataset.key;
-      const newValue = input.value.trim();
+      let newValue = input.value.trim();
+      if (key === 'telp') {
+        if (newValue.startsWith("0") || newValue.startsWith("62")) {
+          return alert("Nomor HP tidak boleh diawali dengan 0 atau 62. Contoh: 81234567890")
+        } else if (!/^\d{9,13}$/.test(newValue)) {
+          return alert("Nomor HP tidak valid. Harus berupa angka 9-13 digit tanpa spasi.")
+        } 
+        
+      }
 
       try {
         const response = await fetch('/dashboard/settings/update', {
@@ -200,6 +236,9 @@
 
           li.querySelectorAll('.edit-mode').forEach(el => el.classList.add('hidden'));
           view.classList.remove('hidden');
+          if (li.dataset.key === 'telp') {
+            document.getElementById("country_code").classList.remove("hidden")
+          }
         } else {
           alert('Gagal menyimpan: ' + result.message);
         }

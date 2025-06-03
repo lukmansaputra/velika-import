@@ -34,14 +34,14 @@
                const discountPrice = Math.round(product.price * (1 - product.discount_percent / 100));
           %>
             <p class="text-red-400 font-bold text-base mb-0">
-              Rp<%= discountPrice.toLocaleString('id-ID') %> <span class="text-xs text-gray-400 line-through ">Rp<%= product.price.toLocaleString('id-ID') %></span>
+                <%= formatCurrency(discountPrice, website.mata_uang) %> <span class="text-xs text-gray-400 line-through "><%= formatCurrency(product.price, website.mata_uang) %></span>
             </p>
             <p class="text-xs text-gray-400 line-through mb-1">
               
             </p>
           <% } else { %>
             <p class="text-red-400 font-bold text-base mb-1">
-              Rp<%= product.price.toLocaleString('id-ID') %>
+                <%= formatCurrency(product.price, website.mata_uang) %>
             </p>
           <% } %>
 

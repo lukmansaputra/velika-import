@@ -57,12 +57,15 @@
 
   <!-- Harga & Diskon -->
   <div class="space-y-1">
-   <% if (product.is_discount_active) { %>
-      <span class="text-red-500 text-lg font-semibold">
-        Rp<%= (product.price * (1 - product.discount_percent / 100)).toLocaleString('id-ID') %>
+   <% if (product.is_discount_active) { 
+     const discountPrice = Math.round(product.price * (1 - product.discount_percent / 100));
+    %>
+    
+      <span class="text-red-500 text-lg font-bold">
+        <%= formatCurrency(discountPrice, website.mata_uang) %>
       </span>
       <span class="line-through text-gray-400">
-        Rp<%= product.price.toLocaleString('id-ID') %>
+        <%= formatCurrency(product.price, website.mata_uang) %>
       </span>
       <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded"> 
         -<%= product.discount_percent %>%
@@ -73,7 +76,7 @@
      </p>
     <% } else { %>
       <span class="text-red-500 text-lg font-semibold">
-        Rp<%= product.price.toLocaleString('id-ID') %>
+         <%= formatCurrency(product.price, website.mata_uang) %>
       </span>
     <% } %>
   </div>
@@ -132,10 +135,8 @@
 
 
         <div class="flex gap-2">
-          <!-- <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full">
-            + Keranjang
-          </button> -->
-          <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://www.berkahjaya.id/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
+ 
+          <a target="_blank" href="https://api.whatsapp.com/send?phone=<%= formatNumber(website.telp) %>&text=Apakah%20product%20ini%20masih%20ada%3F:%20https://www.berkahjaya.id/product/overview/<%= product.slug %>" class="border cursor-pointer text-center border-blue-500 text-blue-500 hover:bg-blue-50 py-2 px-4 rounded w-full">
             Beli
           </a>
         </div>
@@ -147,6 +148,12 @@
 <!-- Carousel & Read More Scripts -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    const formatter = new Intl.NumberFormat('<%= website.mata_uang %>', {
+      style: 'currency',
+      currency: '<%= getLabel( website.mata_uang) || "IDR" %>',
+      minimumFractionDigits: 0
+    });
+
    const minButton = document.getElementById("min");
     const plusButton = document.getElementById("plus");
     const valueInput = document.getElementById("value");
@@ -164,14 +171,15 @@
 
       if (<%= product.is_discount_active %>) {
         totalPriceEl.innerHTML = `
-          <span class="text-sm text-gray-400 line-through">Rp${originalTotal.toLocaleString('id-ID')}</span>
-          <span class="text-red-500 text-lg font-semibold">Rp${total.toLocaleString('id-ID')}</span>
+        <span class="text-red-500 text-lg font-semibold">${formatter.format(total)}</span>
+          <span class="text-sm text-gray-400 line-through">${formatter.format(originalTotal)}</span>
           <span class="ml-2 text-sm text-white bg-red-500 px-2 py-0.5 rounded">
               -<%= product.discount_percent %>%
             </span>
         `;
+
       } else {
-        totalPriceEl.innerHTML = `<div class="text-red-500 text-lg font-semibold">Rp${total.toLocaleString('id-ID')}</div>`;
+        totalPriceEl.innerHTML = `<div class="text-red-500 text-lg font-semibold">${formatter.format(total)}</div>`;
       }
     }
 

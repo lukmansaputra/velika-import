@@ -6,6 +6,8 @@ const cors = require("cors");
 const mainRoutes = require("./App/routes");
 const db = require("./App/database");
 
+const { formatCurrency, getLabel, currency } = require("./App/helper/currency");
+
 const port = process.env.PORT || 8080;
 
 // Gunakan EJS Layouts
@@ -36,7 +38,10 @@ app.use(
 
 app.use(async (req, res, next) => {
   const data = await db.getAllSettings();
-
+  res.locals.formatCurrency = formatCurrency;
+  res.locals.getLabel = getLabel;
+  res.locals.currency = currency;
+  res.locals.formatNumber = require("./App/helper/formatNumber");
   res.locals.website = data.data[0];
   next();
 });

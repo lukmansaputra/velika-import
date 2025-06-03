@@ -124,9 +124,9 @@
         <!-- Kontak -->
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Contact</h3>
-          <ul class="text-sm space-y-2">
-            <li><i class="bi bi-geo-alt"></i> Jakarta, Indonesia</li>
-            <li><a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986"><i class="bi bi-whatsapp"></i> +62 838-3910-1886</a></li>
+          <ul class="text-sm space-y-2"> 
+            <li><i class="bi bi-geo-alt"></i> <%= website.address %></li>
+            <li><a target="_blank" href="https://api.whatsapp.com/send?phone=<%= formatNumber(website.telp) %>"><i class="bi bi-whatsapp"></i> <%= formatNumber(website.telp, true) %></a></li>
             <li><i class="bi bi-envelope"></i> <%= website.email %></li>
           </ul>
         </div>
@@ -134,9 +134,9 @@
         <div>
           <h3 class="text-lg font-semibold mb-4 text-white">Follow Us</h3>
           <div class="flex space-x-4">
-            <a href="#" class="hover:text-white  flex gap-2"><i class="bi bi-facebook"></i> <span>Facebook</span></a>
-            <a target="_blank" href="https://api.whatsapp.com/send?phone=6283839102986" class="hover:text-white flex gap-2"><i class="bi bi-whatsapp"></i> <span>Whatsapp</span></a>
-            <a href="#" class="hover:text-white  flex gap-2"><i class="bi bi-instagram"></i> <span>Instagram</span></a>
+            <a target="_blank" href="<%= website.facebook %>" class="hover:text-white  flex gap-2"><i class="bi bi-facebook"></i> <span>Facebook</span></a>
+            <a target="_blank" href="https://api.whatsapp.com/send?phone=<%= formatNumber(website.telp) %>" class="hover:text-white flex gap-2"><i class="bi bi-whatsapp"></i> <span>Whatsapp</span></a>
+            <a target="_blank" href="<%= website.instagram %>" class="hover:text-white  flex gap-2"><i class="bi bi-instagram"></i> <span>Instagram</span></a>
           </div>
         </div>
       </div>
@@ -180,32 +180,6 @@
       });
     </script>
 
-    <!-- Scroll highlight link -->
-    <script>
-      window.addEventListener("scroll", () => {
-        const fromTop = window.scrollY;
-        const aboutLink = document.querySelector('a[href="/#about"]');
-        const contactLink = document.querySelector('a[href="/#contact"]');
-        const aboutSection = document.querySelector("#about");
-        const contactSection = document.querySelector("#contact");
-
-        if (aboutSection && contactSection) {
-          const aboutTop = aboutSection.offsetTop;
-          const contactTop = contactSection.offsetTop;
-
-          if (fromTop >= aboutTop && fromTop < contactTop) {
-            aboutLink.classList.add("text-blue-700");
-            contactLink.classList.remove("text-blue-700");
-          } else if (fromTop >= contactTop) {
-            contactLink.classList.add("text-blue-700");
-            aboutLink.classList.remove("text-blue-700");
-          } else {
-            aboutLink.classList.remove("text-blue-700");
-            contactLink.classList.remove("text-blue-700");
-          }
-        }
-      });
-    </script>
 
     <!-- Sinkronisasi dark mode toggle -->
     <script>

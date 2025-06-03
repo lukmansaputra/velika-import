@@ -31,7 +31,7 @@
             type="text"
             id="price_display"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            placeholder="Rp12.000"
+            placeholder=""
             autocomplete="off"
             value="<%= product.price %>"
           />
@@ -308,9 +308,9 @@
   const priceHidden = document.getElementById('price');
 
   function formatRupiah(value) {
-    return new Intl.NumberFormat('id-ID', {
+    return new Intl.NumberFormat('<%= website.mata_uang %>', {
       style: 'currency',
-      currency: 'IDR',
+      currency: '<%= getLabel(website.mata_uang) %>',
       minimumFractionDigits: 0
     }).format(value);
   }

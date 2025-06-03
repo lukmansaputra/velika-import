@@ -10,8 +10,19 @@ router.use("/edit-product", editProductsHandle);
 
 router.get("/", async (req, res) => {
   const data = await db.getAllProducts();
+  const now = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
+  );
+  const products = data.data.map((product) => {
+    const start = new Date(product.discount_start);
+    const end = new Date(product.discount_end);
+    product.is_discount_active =
+      product.is_discount && now >= start && now <= end;
+    return product;
+  });
+  console.log(products);
 
-  res.render("dashboard/product", { data });
+  res.render("dashboard/product", { data: products });
 });
 
 router.post("/delete", async (req, res) => {
