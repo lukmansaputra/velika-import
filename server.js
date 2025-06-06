@@ -44,6 +44,12 @@ app.use(async (req, res, next) => {
   res.locals.formatNumber = require("./App/helper/formatNumber");
   res.locals.website = data.data[0];
   res.locals.search = "";
+  res.locals.formatUpperCase = (string) => {
+    if (string.length === 0) {
+      return string; // Handle string kosong
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
   next();
 });
 
