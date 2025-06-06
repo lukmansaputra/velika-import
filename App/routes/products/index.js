@@ -16,12 +16,47 @@ router.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 15;
 
-  const [productsResult, categoriesResult] = await Promise.all([
-    db.getAllFilterProducts({ sort, categorySlug: category, page, limit }),
-    db.getAllCategories(),
-  ]);
+  const search = req.query.search;
+  let productsResult;
 
-  if (!productsResult.success || !categoriesResult.success) {
+  const categoriesResult = await db.getAllCategories();
+
+  if (!categoriesResult.success) {
+    return res.status(404).render("error/404", {
+      code: 404,
+      message: `Kategori tidak ditemukan.`,
+    });
+  }
+
+  // Jika ada pencarian
+  if (search) {
+    res.locals.search = search;
+    const searchResult = await db.searchProduct(search, page, limit);
+
+    if (searchResult.success) {
+      return res.render("products", {
+        products: searchResult.data,
+        categories: categoriesResult.data,
+        sort,
+        selectedCategory: category,
+        pagination: searchResult.pagination,
+      });
+    } else {
+      return res.render("products");
+    }
+  } else {
+    res.locals.search = "";
+  }
+
+  // Load semua produk (fallback atau default)
+  productsResult = await db.getAllFilterProducts({
+    sort,
+    categorySlug: category,
+    page,
+    limit,
+  });
+
+  if (!productsResult.success) {
     return res.status(404).render("error/404", {
       code: 404,
       message: `Halaman ${page} tidak ditemukan.`,

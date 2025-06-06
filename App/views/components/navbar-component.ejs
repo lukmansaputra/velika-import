@@ -1,20 +1,30 @@
-  <nav
-    class="bg-secondary dark:bg-gray-900 sticky w-full z-20 top-0 start-0 border-b border-primary dark:border-gray-600"
-  >
-    <div
-      class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4"
-    >
-      <a href="/" class="flex items-center space-x-2 rtl:space-x-reverse">
-        <img src="/img/light-logo.png" class="h-10" alt="CV Jaya Karya logo" />
-        <!-- <img src="/img/dark-logo.png" class="h-10 dark:block hidden" alt="CV Jaya Karya logo" /> -->
-        <span
-          class="self-center league-spartan-bold text-md md:text-2xl font-semibold whitespace-nowrap dark:text-white text-primary"
-          ><%= website.website_name %></span
-        >
-      </a>
-      <div
-        class="flex lg:hidden md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-      >
+
+
+<nav class="sticky top-0 z-50 border-b-2 md:border-b-2 border-gray-300 dark:border-gray-950 bg-white lg:bg-white/95 dark:bg-gray-900">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+  <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+      <img src="/img/light-logo.png" class="md:h-8 h-6  dark:invert" alt="<%= website.website_name %> Logo" />
+      <span class="self-center md:text-2xl text-md font-semibold text-primary whitespace-nowrap dark:text-white"><%= website.website_name %></span>
+  </a>
+  <div class="flex md:order-2">
+    <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1">
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+      </svg>
+      <span class="sr-only">Search</span>
+    </button>
+    <div class="relative hidden md:block">
+      <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+        </svg>
+        <span class="sr-only">Search icon</span>
+      </div>
+      <form action="/product" method="get">
+        <input type="text" name="search" id="search-navbar" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." value="<%= search %>">
+      </form>
+      
+    </div>
      <div class="flex flex-col justify-center ml-3">
         <input id="light-switch" type="checkbox" name="light-switch" class="light-switch sr-only" />
         <label class="relative cursor-pointer p-2" for="light-switch">
@@ -29,91 +39,39 @@
             <span class="sr-only">Switch to light / dark version</span>
         </label>
     </div>
-       
-        <button
-          data-collapse-toggle="navbar-sticky"
-          type="button"
-          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-primary focus:outline-none focus:ring-2 focus:ring-third dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          aria-controls="navbar-sticky"
-          aria-expanded="false"
-        >
-          <span class="sr-only">Open main menu</span>
-          <svg
-            class="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
+    <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-search" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+        </svg>
+    </button>
+  </div>
+ 
+    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+      <div class="relative mt-3 md:hidden">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
           </svg>
-        </button>
+        </div>
+        <form action="/product" method="get">
+          <input type="text" name="search" id="search-navbar" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." value="<%= search %>">
+        </form>
       </div>
-      <div
-        class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-        id="navbar-sticky"
-      >
-        <ul
-          class="flex flex-col p-4 md:p-0 mt-4 font-medium rounded-lg bg-transparent md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-inherit dark:bg-gray-900 md:dark:bg-gray-900 dark:border-gray-700"
-        >
-          <li>
-            <a
-              href="/"
-              class="block py-2 px-3 rounded-sm 
-                <%= active === 'home' ? 'md:text-primary text-secondary bg-primary md:bg-transparent md:text-blue-700 md:dark:text-blue-500' 
-                                      : 'text-primary md:text-gray-100 hover:bg-third hover:text-secondary md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' %>"
-              >Home</a>
-          </li>
-
-          <li>
-            <a
-              href="/product"
-              class="block py-2 px-3 rounded-sm 
-                <%= active === 'product' ? 'md:text-primary text-secondary bg-primary md:bg-transparent md:text-blue-700 md:dark:text-blue-500' 
-                                      : 'text-primary md:text-gray-100 hover:bg-third hover:text-secondary md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' %>"
-              >Products</a>
-          </li>
-
-          <li>
-            <a
-              href="/#about"
-              class="block py-2 px-3 rounded-sm 
-                <%= active === 'about' ? 'md:text-primary text-secondary bg-primary md:bg-transparent md:text-blue-700 md:dark:text-blue-500' 
-                                      : 'text-primary md:text-gray-100 hover:bg-third hover:text-secondary md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' %>"
-              >About us</a>
-          </li>
-
-          <li>
-            <a
-              href="/#contact"
-              class="block py-2 px-3 rounded-sm 
-                <%= active === 'contact' ? 'md:text-primary text-secondary bg-primary md:bg-transparent md:text-blue-700 md:dark:text-blue-500' 
-                                      : 'text-primary md:text-gray-100 hover:bg-third hover:text-secondary md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' %>"
-              >Contact us</a>
-          </li>
-
-        </ul>
-        <div class=" flex-col justify-center ml-3 hidden lg:flex">
-        <input id="light-switch" type="checkbox" name="light-switch" class="light-switch sr-only" />
-        <label class="relative cursor-pointer p-2" for="light-switch">
-            <svg class="dark:hidden" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-                <path class="fill-slate-300" d="M7 0h2v2H7zM12.88 1.637l1.414 1.415-1.415 1.413-1.413-1.414zM14 7h2v2h-2zM12.95 14.433l-1.414-1.413 1.413-1.415 1.415 1.414zM7 14h2v2H7zM2.98 14.364l-1.413-1.415 1.414-1.414 1.414 1.415zM0 7h2v2H0zM3.05 1.706 4.463 3.12 3.05 4.535 1.636 3.12z" />
-                <path class="fill-slate-400" d="M8 4C5.8 4 4 5.8 4 8s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4Z" />
-            </svg>
-            <svg class="hidden dark:block" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-                <path class="fill-slate-400" d="M6.2 1C3.2 1.8 1 4.6 1 7.9 1 11.8 4.2 15 8.1 15c3.3 0 6-2.2 6.9-5.2C9.7 11.2 4.8 6.3 6.2 1Z" />
-                <path class="fill-slate-500" d="M12.5 5a.625.625 0 0 1-.625-.625 1.252 1.252 0 0 0-1.25-1.25.625.625 0 1 1 0-1.25 1.252 1.252 0 0 0 1.25-1.25.625.625 0 1 1 1.25 0c.001.69.56 1.249 1.25 1.25a.625.625 0 1 1 0 1.25c-.69.001-1.249.56-1.25 1.25A.625.625 0 0 1 12.5 5Z" />
-            </svg>
-            <span class="sr-only">Switch to light / dark version</span>
-        </label>
+      <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium  text-lg border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+        <li>
+          <a href="/" class="block rounded-sm md:p-0 <%= active === 'home' ? 'py-2 px-3 text-white bg-primary md:bg-transparent md:text-primary  md:dark:text-blue-500'                                           : 'md:hover:text-primary py-2 px-3 text-primary hover:bg-five  md:bg-transparent md:text-gray-900  md:dark:hover:text-blue-500 dark:bg-gray-900 dark:text-gray-200 md:hover:bg-transparent'%>" aria-current="page">Home</a>
+        </li>
+        <li>
+          <a href="/product" class="block rounded-sm md:p-0 <%= active === 'product' ? 'py-2 px-3 text-white bg-primary  md:bg-transparent md:text-primary  md:dark:text-blue-500'                                           : 'md:hover:text-primary py-2 px-3 text-primary hover:bg-five  md:bg-transparent md:text-gray-900  md:dark:hover:text-blue-500 dark:bg-gray-900 dark:text-gray-200 md:hover:bg-transparent'%> ">Product</a>
+        </li>
+        <li>
+          <a href="/#about" class="block rounded-sm md:p-0 <%= active === 'about' ? 'py-2 px-3 text-white bg-primary  md:bg-transparent md:text-primary  md:dark:text-blue-500'                                           : 'md:hover:text-primary py-2 px-3 text-primary hover:bg-five  md:bg-transparent md:text-gray-900  md:dark:hover:text-blue-500 dark:bg-gray-900 dark:text-gray-200 md:hover:bg-transparent'%> ">About</a>
+        </li>
+        <li>
+          <a href="/#contact" class="block rounded-sm md:p-0 <%= active === 'contact' ? 'py-2 px-3 text-white bg-primary  md:bg-transparent md:text-primary  md:dark:text-blue-500'                                           : 'md:hover:text-primary py-2 px-3 text-primary hover:bg-five  md:bg-transparent md:text-gray-900  md:dark:hover:text-blue-500 dark:bg-gray-900 dark:text-gray-200 md:hover:bg-transparent'%> ">Contact Us</a>
+        </li>
+      </ul>
     </div>
-      </div>
-    </div>
-  </nav>
-  
+  </div>
+</nav>

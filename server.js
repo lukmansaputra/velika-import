@@ -43,6 +43,7 @@ app.use(async (req, res, next) => {
   res.locals.currency = currency;
   res.locals.formatNumber = require("./App/helper/formatNumber");
   res.locals.website = data.data[0];
+  res.locals.search = "";
   next();
 });
 

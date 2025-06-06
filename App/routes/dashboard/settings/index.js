@@ -9,6 +9,8 @@ router.get("/", async (req, res) => {
 });
 router.post("/update", async (req, res) => {
   const result = await db.updateSetting(req.body.key, req.body.value);
+  console.log(result);
+
   if (!result.success) {
     return res.status(500).json({ message: result.message });
   }

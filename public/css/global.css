@@ -1,10 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
 
 :root {
-  --primary: #f5c45e;
+  --primary: #e68bbe;
   --secondary: #1a1a1a;
-  --third: #ebbb6d;
-  --four: #fed273;
+  --third: #eea1cd;
+  --four: #f4b8da;
+  --five: #fff2f9;
 }
 
 .bg-primary {

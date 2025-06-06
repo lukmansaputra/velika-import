@@ -347,6 +347,49 @@ class Database {
     return { success: true, message: "Product deleted successfully." };
   }
 
+  async searchProduct(query, page = 1, limit = 10) {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
+      .from("products")
+      .select("*, categories (name, slug), product_images (image_path)", {
+        count: "exact",
+      })
+      .ilike("name", `%${query}%`)
+      .range(from, to);
+
+    if (error) {
+      return { success: false, message: "Gagal mengambil data dari Supabase" };
+    }
+
+    if (!data || data.length === 0) {
+      return {
+        success: false,
+        message: "Data produk tidak ditemukan",
+        data: [],
+      };
+    }
+
+    const formatted = data.map((item) => ({
+      ...item,
+      category: item.categories,
+      images: item.product_images?.map((i) => i.image_path) || [],
+    }));
+
+    const totalPages = count ? Math.ceil(count / limit) : 1;
+
+    return {
+      success: true,
+      data: formatted,
+      pagination: {
+        total: count || 0,
+        page,
+        totalPages,
+      },
+    };
+  }
+
   /** ========== WEBSITE SETTINGS ========== */
   async getAllSettings() {
     const { data, error } = await supabase.from("website_settings").select("*");
@@ -363,7 +406,7 @@ class Database {
     const { data, error } = await supabase
       .from("website_settings")
       .update(updateData)
-      .eq("id", 1);
+      .eq("id", "2db1ee24-b903-4961-b5b1-6cd6861e6c5e");
 
     if (error) {
       return { success: false, message: error.message };
